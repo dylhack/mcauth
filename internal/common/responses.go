@@ -11,25 +11,29 @@ type ErrorResponse struct {
 
 /* isPlayerValid possible responses */
 
-type PlayerValidation struct {
-	Valid bool `json:"valid"`
-}
-
 // this describes why a player isn't valid
 type InvalidPlayer struct {
-	PlayerValidation
+	Valid  bool   `json:"valid"`
 	Reason string `json:"reason"`
 }
 
 // this gives the minecraft server the provided player's pending authentication code.
 type InvalidPlayerAuth struct {
-	InvalidPlayer
+	Reason   string `json:"reason"`
 	AuthCode string `json:"auth_code"`
 }
 
+const (
+	NoLink         = "no_link"
+	NotWhitelisted = "no_role"
+	Maintenance    = "maintenance"
+	//PlayerIsBanned = "banned"
+	AuthCode = "auth_code"
+)
+
 // this says that the provided player is valid and ready to join the Minecraft server.
 type ValidPlayer struct {
-	PlayerValidation
+	Valid bool `json:"valid"`
 }
 
 /* getAltsOf possible responses */
