@@ -71,6 +71,8 @@ func (at *AltsTable) GetAlt(identifier string) (result []AltAcc, err error) {
 		return result, err
 	}
 
+	defer rows.Close()
+
 	for rows.Next() {
 		err = rows.Scan(&row.PlayerName, &row.PlayerID, &row.Owner)
 

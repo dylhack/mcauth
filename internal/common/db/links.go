@@ -68,6 +68,8 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 		return ""
 	}
 
+	defer rows.Close()
+
 	for rows.Next() {
 		err = rows.Scan(&playerID)
 
@@ -96,6 +98,7 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
 		log.Printf("Failed to get \"%s\"'s player ID, because\n%s\n", playerID, err.Error())
 		return ""
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(&discordID)

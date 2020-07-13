@@ -50,6 +50,8 @@ func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
 		return ""
 	}
 
+	defer rows.Close()
+
 	for rows.Next() {
 		err = rows.Scan(&authCode)
 
@@ -64,17 +66,17 @@ func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
 
 // Authorize a given authentication code. It will return the player ID associated with the given
 // auth code.
-func (at *AuthTable) Authorize(authCode string) (playerID string) {
-	playerID = at.GetPlayerID(authCode)
+func (at *AuthTable) Authorize(authCode string) (string, bool) {
+	playerID := at.GetPlayerID(authCode)
 
 	// see if they have an authentication code
 	if len(playerID) > 0 {
 		// remove them from the database
-		go at.RemoveCode(authCode)
+		at.RemoveCode(authCode)
 
-		return playerID
+		return playerID, true
 	} else {
-		return ""
+		return "", false
 	}
 }
 
@@ -82,6 +84,7 @@ func (at *AuthTable) Authorize(authCode string) (playerID string) {
 func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
 	prep, _ := at.db.Prepare("SELECT player_id FROM auth_codes WHERE auth_code=?")
 	rows, _ := prep.Query(authCode)
+	defer rows.Close()
 
 	for rows.Next() {
 		err := rows.Scan(&playerID)
@@ -98,7 +101,7 @@ func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
 func (at *AuthTable) RemoveCode(authCode string) {
 	prep, _ := at.db.Prepare("DELETE FROM auth_codes WHERE auth_code=?")
 
-	_, err := prep.Exec()
+	_, err := prep.Exec(authCode)
 
 	if err != nil {
 		log.Printf(
