@@ -29,10 +29,10 @@ func StartBot(config *c.DiscordConfig, store *db.Store) Bot {
 		locked: true,
 	}
 
-	client.AddHandler(bot.OnReady)
 	client.AddHandler(bot.OnMessage)
+	client.AddHandlerOnce(bot.OnReady)
 
-	log.Println("Connecting to Discord...")
+	log.Println("Starting to Discord bot...")
 
 	if err := client.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord\n" + err.Error())

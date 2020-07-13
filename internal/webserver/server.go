@@ -22,12 +22,14 @@ func StartServer(config *common.WebServerConfig, bot *bot.Bot, store *db.Store) 
 	server := Server{bot: bot, store: store, config: config}
 
 	router.HandleFunc("/isValidPlayer/{playerID}", server.isPlayerValid)
-	log.Println("Starting web-server...")
 
-	if err := http.ListenAndServe(
+	log.Printf("web-server is listening on port %d\n", config.Port)
+	err := http.ListenAndServe(
 		":"+strconv.Itoa(config.Port),
 		router,
-	); err != nil {
+	)
+
+	if err != nil {
 		log.Fatalln("Failed to start web-server, is the port available?\n" + err.Error())
 	}
 }
