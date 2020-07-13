@@ -3,6 +3,7 @@ package bot
 import (
 	dg "github.com/bwmarrin/discordgo"
 	"log"
+	"strings"
 )
 
 func (bot *Bot) OnReady(_ *dg.Session, ready *dg.Ready) {
@@ -40,4 +41,12 @@ func CheckRoles(roles []*dg.Role, given []string) {
 			log.Println("Failed to find role: " + givenID)
 		}
 	}
+}
+
+func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
+	// ignore bots and messages that don't start with the prefix
+	if msg.Author.Bot || !strings.HasPrefix(msg.Content, bot.config.Prefix) {
+		return
+	}
+
 }

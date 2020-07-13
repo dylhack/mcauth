@@ -10,8 +10,8 @@ type AltsTable struct {
 }
 
 type AltAcc struct {
-	Owner string `json:"alt_owner"`
-	PlayerID string `json:"alt_id"`
+	Owner      string `json:"alt_owner"`
+	PlayerID   string `json:"alt_id"`
 	PlayerName string `json:"alt_name"`
 }
 
@@ -36,7 +36,7 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 	if err != nil {
 		log.Printf(
 			"Failed to insert (%s/%s/%s), because\n%s\n",
-			owner,playerID,playerName,err.Error(),
+			owner, playerID, playerName, err.Error(),
 		)
 	}
 
@@ -51,7 +51,7 @@ func (at *AltsTable) RemAlt(identifier string) error {
 	if err != nil {
 		log.Printf(
 			"Failed to delete (%s), because\n%s\n",
-			identifier,err.Error(),
+			identifier, err.Error(),
 		)
 	}
 	return err

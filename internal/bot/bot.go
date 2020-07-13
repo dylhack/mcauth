@@ -30,6 +30,7 @@ func StartBot(config *c.DiscordConfig, store *db.Store) Bot {
 	}
 
 	client.AddHandler(bot.OnReady)
+	client.AddHandler(bot.OnMessage)
 
 	log.Println("Connecting to Discord...")
 

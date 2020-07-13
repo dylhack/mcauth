@@ -113,4 +113,3 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
 	}
 	return ""
 }
-

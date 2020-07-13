@@ -7,9 +7,9 @@ import (
 )
 
 type Store struct {
-	db *sql.DB
-	Alts AltsTable
-	Auth AuthTable
+	db    *sql.DB
+	Alts  AltsTable
+	Auth  AuthTable
 	Links LinksTable
 }
 

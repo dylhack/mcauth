@@ -108,4 +108,3 @@ func (at *AuthTable) RemoveCode(authCode string) {
 		)
 	}
 }
-
