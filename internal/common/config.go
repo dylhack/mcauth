@@ -15,6 +15,8 @@ type Config struct {
 }
 
 type DiscordConfig struct {
+	// When a user asks for help this is what the bot responds with
+	Help   string `yaml:"help_message"`
 	Token  string `yaml:"token"`
 	Prefix string `yaml:"prefix"`
 	// Guild to serve

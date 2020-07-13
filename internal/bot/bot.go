@@ -39,3 +39,14 @@ func StartBot(config *c.DiscordConfig, store *db.Store) Bot {
 	}
 	return bot
 }
+
+func (bot *Bot) IsAdmin(member *dg.Member) bool {
+	for _, roleID := range member.Roles {
+		for _, adminID := range bot.config.AdminRoles {
+			if adminID == roleID {
+				return true
+			}
+		}
+	}
+	return false
+}

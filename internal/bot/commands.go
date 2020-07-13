@@ -8,8 +8,14 @@ import (
 	"log"
 )
 
-/* Regular Commands */
+const commands = `These are all the commands:
+ - {prefix} auth <authentication code>
+ - {prefix} help
+ - {prefix} whoami
+ - {prefix} whois <player name or @ Discord user>
+`
 
+/* Regular Commands */
 func (bot *Bot) authCMD(msg *dg.MessageCreate, args []string) {
 	// args = [<prefix>, "auth", <auth code>]
 

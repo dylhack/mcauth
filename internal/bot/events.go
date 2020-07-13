@@ -1,6 +1,7 @@
 package bot
 
 import (
+	util "github.com/Floor-Gang/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
 	"log"
 	"strings"
@@ -51,7 +52,7 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 
 	// args = [<prefix>, <sub-command>]
 	args := strings.Fields(msg.Content)
-
+	//isAdmin := bot.IsAdmin(msg.Member)
 	if len(args) < 2 {
 		return
 	}
@@ -65,6 +66,16 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		break
 	case "whois":
 		bot.whoIs(msg, args)
+		break
+	case "commands":
+		util.Reply(
+			bot.client, msg.Message,
+			strings.Replace(commands, "{prefix}", bot.config.Prefix, -1),
+		)
+		break
+		// Administrator commands
+	case "help":
+		util.Reply(bot.client, msg.Message, bot.config.Help)
 		break
 	}
 }
