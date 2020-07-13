@@ -43,7 +43,7 @@ func (at *AuthTable) NewAuthCode(playerID string) (authCode string, err error) {
 }
 
 func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
-	prep, _ := at.db.Prepare("SELECT auth_code WHERE player_id=?")
+	prep, _ := at.db.Prepare("SELECT auth_code FROM auth_codes WHERE player_id=?")
 	rows, err := prep.Query(playerID)
 
 	if err != nil {
@@ -80,7 +80,7 @@ func (at *AuthTable) Authorize(authCode string) (playerID string) {
 
 // Get the player ID associated with the given authentication code.
 func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
-	prep, _ := at.db.Prepare("SELECT player_id WHERE auth_code=?")
+	prep, _ := at.db.Prepare("SELECT player_id FROM auth_codes WHERE auth_code=?")
 	rows, _ := prep.Query(authCode)
 
 	for rows.Next() {
