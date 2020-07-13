@@ -8,18 +8,28 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
-	bot   *bot.Bot
-	store *db.Store
+	bot    *bot.Bot
+	store  *db.Store
+	config *common.WebServerConfig
 }
 
-func StartServer(bot *bot.Bot, store *db.Store) {
+func StartServer(config *common.WebServerConfig, bot *bot.Bot, store *db.Store) {
 	router := mux.NewRouter()
-	server := Server{bot: bot, store: store}
+	server := Server{bot: bot, store: store, config: config}
 
-	router.HandleFunc("/isValidPlayer/:playerID", server.isPlayerValid)
+	router.HandleFunc("/isValidPlayer/{playerID}", server.isPlayerValid)
+	log.Println("Starting web-server...")
+
+	if err := http.ListenAndServe(
+		":"+strconv.Itoa(config.Port),
+		router,
+	); err != nil {
+		log.Fatalln("Failed to start web-server, is the port available?\n" + err.Error())
+	}
 }
 
 /* error handlers */
@@ -38,6 +48,7 @@ func NoPlayerError(res http.ResponseWriter) {
 		return
 	}
 
+	res.WriteHeader(http.StatusBadRequest)
 	_, err = res.Write(serialized)
 
 	if err != nil {
@@ -45,8 +56,6 @@ func NoPlayerError(res http.ResponseWriter) {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	res.WriteHeader(http.StatusBadRequest)
 }
 
 func Ship(res http.ResponseWriter, response interface{}) {
@@ -65,6 +74,4 @@ func Ship(res http.ResponseWriter, response interface{}) {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	res.WriteHeader(http.StatusOK)
 }

@@ -12,5 +12,5 @@ func main() {
 	store := db.GetStore(config.DB.Location)
 
 	dBot := bot.StartBot(&config.Discord, &store)
-	webserver.StartServer(&dBot, &store)
+	webserver.StartServer(&config.WebServer, &dBot, &store)
 }
