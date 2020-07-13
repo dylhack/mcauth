@@ -49,4 +49,16 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		return
 	}
 
+	// args = [<prefix>, <sub-command>]
+	args := strings.Fields(msg.Content)
+
+	if len(args) < 2 {
+		return
+	}
+
+	switch args[1] {
+	case "auth":
+		bot.AuthCMD(msg, args)
+		break
+	}
 }
