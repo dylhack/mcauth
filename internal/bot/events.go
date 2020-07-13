@@ -58,7 +58,10 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 
 	switch args[1] {
 	case "auth":
-		bot.AuthCMD(msg, args)
+		bot.authCMD(msg, args)
+		break
+	case "whoami":
+		bot.whoAmI(msg)
 		break
 	}
 }

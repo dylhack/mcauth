@@ -4,12 +4,13 @@ import (
 	"fmt"
 	util "github.com/Floor-Gang/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
+	"github.com/dhghf/mcauth/internal/common"
 	"log"
 )
 
 /* Regular Commands */
 
-func (bot *Bot) AuthCMD(msg *dg.MessageCreate, args []string) {
+func (bot *Bot) authCMD(msg *dg.MessageCreate, args []string) {
 	// args = [<prefix>, "auth", <auth code>]
 
 	if len(args) < 3 {
@@ -36,6 +37,23 @@ func (bot *Bot) AuthCMD(msg *dg.MessageCreate, args []string) {
 		}
 	} else {
 		util.Reply(bot.client, msg.Message, "Invalid authentication code.")
+	}
+}
+
+func (bot *Bot) whoAmI(msg *dg.MessageCreate) {
+	playerID := bot.store.Links.GetPlayerID(msg.Author.ID)
+
+	if len(playerID) == 0 {
+		util.Reply(bot.client, msg.Message, "You aren't linked with any Minecraft accounts.")
+		return
+	}
+
+	playerName := common.GetPlayerName(playerID)
+
+	if len(playerName) > 0 {
+		util.Reply(bot.client, msg.Message, "You are: "+playerName)
+	} else {
+		util.Reply(bot.client, msg.Message, "I failed to find your associated Minecraft player name")
 	}
 }
 
