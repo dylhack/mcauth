@@ -13,7 +13,7 @@ type Store struct {
 	Links LinksTable
 }
 
-func GetController(dbPath string) (c Store) {
+func GetStore(dbPath string) (c Store) {
 	db, err := util.GetSQLiteDB(dbPath)
 
 	if err != nil {
