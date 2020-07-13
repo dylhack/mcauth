@@ -57,4 +57,65 @@ func (bot *Bot) whoAmI(msg *dg.MessageCreate) {
 	}
 }
 
+func (bot *Bot) whoIs(msg *dg.MessageCreate, args []string) {
+	var playerID, playerName string
+	// first let's see if they mentioned a user
+	if len(msg.Mentions) > 0 {
+		user := msg.Mentions[0]
+		playerID = bot.store.Links.GetPlayerID(user.ID)
+
+		if len(playerID) == 0 {
+			util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
+			return
+		}
+		playerName = common.GetPlayerName(playerID)
+
+		if len(playerName) == 0 {
+			util.Reply(
+				bot.client,
+				msg.Message,
+				"I failed to get the player name but this is the ID"+
+					" they're linked with "+playerID,
+			)
+			return
+		}
+		util.Reply(
+			bot.client,
+			msg.Message,
+			fmt.Sprintf("%s is %s", user.Mention(), playerName),
+		)
+		return
+	}
+
+	// if they didn't mention a user then check if they're talking a minecraft
+	// args = [<prefix>, "whois", <minecraft player name>]
+	if len(args) < 3 {
+		util.Reply(
+			bot.client, msg.Message,
+			fmt.Sprintf("%s whois <Minecraft player name>", bot.config.Prefix),
+		)
+		return
+	}
+
+	playerName = args[2]
+	playerID = common.GetPlayerID(playerName)
+
+	if len(playerID) == 0 {
+		util.Reply(bot.client, msg.Message, "That isn't a Minecraft player")
+		return
+	}
+
+	userID := bot.store.Links.GetDiscordID(playerID)
+	if len(userID) == 0 {
+		util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
+		return
+	}
+
+	util.Reply(
+		bot.client,
+		msg.Message,
+		fmt.Sprintf("%s is <@%s> (%s)", playerName, userID, userID),
+	)
+}
+
 /* Administrator Commands */

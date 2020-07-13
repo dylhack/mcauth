@@ -63,5 +63,8 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	case "whoami":
 		bot.whoAmI(msg)
 		break
+	case "whois":
+		bot.whoIs(msg, args)
+		break
 	}
 }
