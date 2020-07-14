@@ -52,6 +52,7 @@ func (s *Server) newAuthCode(res http.ResponseWriter, playerID string) {
 
 	response := common.InvalidPlayerAuth{
 		Reason:   common.AuthCode,
+		Valid:    false,
 		AuthCode: authCode,
 	}
 	Ship(res, response)

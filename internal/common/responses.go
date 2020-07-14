@@ -20,6 +20,7 @@ type InvalidPlayer struct {
 // this gives the minecraft server the provided player's pending authentication code.
 type InvalidPlayerAuth struct {
 	Reason   string `json:"reason"`
+	Valid    bool   `json:"valid"`
 	AuthCode string `json:"auth_code"`
 }
 
