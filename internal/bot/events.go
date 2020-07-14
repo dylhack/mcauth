@@ -52,7 +52,10 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 
 	// args = [<prefix>, <sub-command>]
 	args := strings.Fields(msg.Content)
-	//isAdmin := bot.IsAdmin(msg.Member)
+	isAdmin := bot.IsAdmin(msg.Member)
+	// whether they attempted to run an administrator related command
+	adminAttempt := false
+
 	if len(args) < 2 {
 		return
 	}
@@ -79,19 +82,29 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		break
 	/* Administrator Commands */
 	case "lock":
-		if bot.IsAdmin(msg.Member) {
+		if isAdmin {
 			bot.locked = true
 			util.Reply(bot.client, msg.Message, "Maintenance mode is now on.")
+		} else {
+			adminAttempt = true
 		}
 		break
 	case "unlock":
-		if bot.IsAdmin(msg.Member) {
+		if isAdmin {
 			bot.locked = false
 			util.Reply(bot.client, msg.Message, "Maintenance mode is now off.")
+		} else {
+			adminAttempt = true
 		}
 		break
 	default:
 		util.Reply(bot.client, msg.Message, bot.config.Help)
 		break
+	}
+
+	if adminAttempt {
+		util.Reply(bot.client, msg.Message,
+			"You must be an administrator to run this command.",
+		)
 	}
 }
