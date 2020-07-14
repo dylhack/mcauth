@@ -124,4 +124,54 @@ func (bot *Bot) whoIs(msg *dg.MessageCreate, args []string) {
 	)
 }
 
+// there are two ways of unlinking.
+// 1. Just by saying "unlink" which will unlink the account associated with your account
+// 2. An admin can unlink someone's account
+// 2.1 Based on Discord user
+// 2.2 Based on Minecraft player name
+func (bot *Bot) UnlinkCMD(msg *dg.MessageCreate, args []string) {
+	var err error
+	// 1. Just by saying "unlink" which will unlink the account associated with your account
+	// then -> args should be [<prefix>, unlink]
+	if len(args) < 3 {
+		if err = bot.store.Links.UnLink(msg.Author.ID); err != nil {
+			util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+		} else {
+			util.Reply(bot.client, msg.Message, "Unlinked.")
+		}
+		return
+	}
+
+	/* 2. An admin can unlink someone's account */
+	// then -> args is [<prefix>, unlink, <@Discord User> OR <Minecraft player name>]
+
+	// 2.1 Based on Discord user
+	// then -> msg.Mentions should be greater than 0
+	if len(msg.Mentions) > 0 {
+		user := msg.Mentions[0]
+		if err = bot.store.Links.UnLink(user.ID); err != nil {
+			util.Reply(bot.client, msg.Message, "That user wasn't linked with any account.")
+		} else {
+			util.Reply(bot.client, msg.Message, "Unlinked "+user.Mention()+".")
+		}
+		return
+	}
+
+	// 2.2 Based on Minecraft player name
+	// then -> args = [<prefix>, unlink, <player name>]
+	playerName := args[2]
+	playerID := common.GetPlayerID(playerName)
+
+	if len(playerID) == 0 {
+		util.Reply(bot.client, msg.Message, playerName+" isn't a Minecraft account.")
+		return
+	}
+
+	if err = bot.store.Links.UnLink(playerID); err != nil {
+		util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+	} else {
+		util.Reply(bot.client, msg.Message, "Unlinked "+playerName+".")
+	}
+}
+
 /* Administrator Commands */

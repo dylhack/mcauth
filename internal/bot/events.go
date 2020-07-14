@@ -67,6 +67,9 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	case "whois":
 		bot.whoIs(msg, args)
 		break
+	case "unlink":
+		bot.UnlinkCMD(msg, args)
+		break
 	case "commands":
 		util.Reply(
 			bot.client, msg.Message,

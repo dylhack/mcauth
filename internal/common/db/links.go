@@ -56,6 +56,20 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 	return err
 }
 
+func (lt *LinksTable) UnLink(identifier string) error {
+	prep, _ := lt.db.Prepare("DELETE FROM links WHERE discord_id=? OR player_id=?")
+	_, err := prep.Exec(identifier, identifier)
+
+	if err != nil {
+		log.Printf(
+			"Failed to remove (%s), because\n%s\n",
+			identifier, err.Error(),
+		)
+	}
+
+	return err
+}
+
 func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 	prep, _ := lt.db.Prepare(
 		"SELECT player_id FROM links WHERE discord_id=?",
