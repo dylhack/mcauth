@@ -1,5 +1,7 @@
 github.com/Floor-Gang/utilpkg v0.0.0-20200710021506-ec5dc3ec45c6 h1:tPjKpKN2pVWm1kV4xpF8+5otv562JKxhvJ/JTXpoY7U=
 github.com/Floor-Gang/utilpkg v0.0.0-20200710021506-ec5dc3ec45c6/go.mod h1:N54bf2RQdkWxc/J/zhUf61g4+uBrFXnmejTWRm60WpI=
+github.com/Floor-Gang/utilpkg v0.0.0-20200714220544-0281443cd2a5 h1:flk1nRXzprcEdrvO0tslnbU4A/AyPi5UFcjl8MRyiCs=
+github.com/Floor-Gang/utilpkg v0.0.0-20200714220544-0281443cd2a5/go.mod h1:N54bf2RQdkWxc/J/zhUf61g4+uBrFXnmejTWRm60WpI=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/andybalholm/cascadia v1.1.0/go.mod h1:GsXiBklL0woXo1j/WYWtSYYC4ouU9PqHO0sqidkEA4Y=
 github.com/bwmarrin/discordgo v0.21.1 h1:UI2PWwzvn5IFuscYcDc6QB/duhs9MUIjQ4HclcIZisc=
@@ -33,6 +35,7 @@ golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJ
 golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd h1:xhmwyvizuTgC2qz7ZlMluP20uW+C3Rm0FD/WLDX8884=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=

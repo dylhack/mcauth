@@ -50,3 +50,19 @@ func (bot *Bot) IsAdmin(member *dg.Member) bool {
 	}
 	return false
 }
+
+func (bot *Bot) CheckRoles(role []string) (isWhitelisted bool, isAdmin bool) {
+	for _, role := range role {
+		for _, adminRole := range bot.config.AdminRoles {
+			if adminRole == role {
+				return true, true
+			}
+		}
+		for _, whitelisted := range bot.config.Whitelist {
+			if whitelisted == role {
+				return true, false
+			}
+		}
+	}
+	return false, false
+}

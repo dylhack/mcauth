@@ -1,7 +1,6 @@
 package bot
 
 import (
-	util "github.com/Floor-Gang/utilpkg/botutil"
 	c "github.com/dhghf/mcauth/internal/common"
 	"log"
 )
@@ -25,20 +24,19 @@ func (bot *Bot) ValidatePlayer(playerID string) (bool, string) {
 	}
 
 	// check whether they have an administrator roles. they pass any exceptions.
-	hasAdmin, _ := util.HasRole(member.Roles, bot.config.AdminRoles)
+	isWhitelisted, hasAdmin := bot.CheckRoles(member.Roles)
 
+	// if they're an admin then they pass all exceptions
 	if hasAdmin {
 		return true, ""
 	}
 
-	// if they're a regular user ...
-	isWhitelisted, _ := util.HasRole(member.Roles, bot.config.Whitelist)
-
+	// if they're a regular user then check if they have the right roles
 	if !isWhitelisted {
 		return false, c.NotWhitelisted
 	}
 
-	// check if maintenance mode is on
+	// check if maintenance mode is on, regular users aren't allowed to join during maintenance
 	if bot.locked {
 		return false, c.Maintenance
 	}
