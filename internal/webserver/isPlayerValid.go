@@ -3,6 +3,7 @@ package webserver
 import (
 	"github.com/dhghf/mcauth/internal/common"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -18,6 +19,11 @@ func (s *Server) isPlayerValid(res http.ResponseWriter, req *http.Request) {
 
 	// reason possibilities: NotWhitelisted,
 	isValid, reason := s.bot.ValidatePlayer(playerID)
+	log.Printf(
+		`Validating player "%s"
+ - Valid: %t
+ - Reason: %s`, playerID, isValid, reason,
+	)
 
 	if isValid {
 		response := common.ValidPlayer{
