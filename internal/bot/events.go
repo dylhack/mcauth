@@ -75,6 +75,7 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		break
 		// Administrator commands
 	case "help":
+	default:
 		util.Reply(bot.client, msg.Message, bot.config.Help)
 		break
 	}
