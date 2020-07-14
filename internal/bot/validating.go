@@ -28,7 +28,7 @@ func (bot *Bot) ValidatePlayer(playerID string) (bool, string) {
 
 	// if they're an admin then they pass all exceptions
 	if hasAdmin {
-		return true, ""
+		return true, "Administrator"
 	}
 
 	// if they're a regular user then check if they have the right roles
@@ -42,5 +42,5 @@ func (bot *Bot) ValidatePlayer(playerID string) (bool, string) {
 	}
 
 	// finally return true
-	return true, ""
+	return true, "Whitelisted"
 }
