@@ -58,6 +58,7 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	}
 
 	switch args[1] {
+	/* User Commands */
 	case "auth":
 		bot.authCMD(msg, args)
 		break
@@ -76,8 +77,19 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 			strings.Replace(commands, "{prefix}", bot.config.Prefix, -1),
 		)
 		break
-		// Administrator commands
-	case "help":
+	/* Administrator Commands */
+	case "lock":
+		if bot.IsAdmin(msg.Member) {
+			bot.locked = true
+			util.Reply(bot.client, msg.Message, "Maintenance mode is now on.")
+		}
+		break
+	case "unlock":
+		if bot.IsAdmin(msg.Member) {
+			bot.locked = false
+			util.Reply(bot.client, msg.Message, "Maintenance mode is now off.")
+		}
+		break
 	default:
 		util.Reply(bot.client, msg.Message, bot.config.Help)
 		break
