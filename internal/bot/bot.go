@@ -15,14 +15,14 @@ type Bot struct {
 	locked bool
 }
 
-func StartBot(config *c.DiscordConfig, store *db.Store) Bot {
+func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 	client, _ := dg.New("Bot " + config.Token)
 
 	client.Identify.Intents = dg.MakeIntent(
 		dg.IntentsGuildMessages + dg.IntentsGuildMembers,
 	)
 
-	bot := Bot{
+	bot := &Bot{
 		client: client,
 		store:  store,
 		config: config,

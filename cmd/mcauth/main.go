@@ -11,6 +11,6 @@ func main() {
 	config := common.GetConfig("./config.yml")
 	store := db.GetStore(config.DB.Location)
 
-	dBot := bot.StartBot(&config.Discord, &store)
-	webserver.StartServer(&config.WebServer, &dBot, &store)
+	discordBot := bot.StartBot(&config.Discord, &store)
+	webserver.StartServer(&config.WebServer, discordBot, &store)
 }
