@@ -24,7 +24,10 @@ func GetAltsTable(db *sql.DB) AltsTable {
 	if err != nil {
 		log.Fatalln("Failed to init authentication table\n" + err.Error())
 	}
-	return AltsTable{db: db}
+	return AltsTable{
+		db:   db,
+		fast: make(map[string]*AltAcc),
+	}
 }
 
 func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) error {
