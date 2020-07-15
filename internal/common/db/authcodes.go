@@ -45,6 +45,8 @@ func (at *AuthTable) NewAuthCode(playerID string) (authCode string) {
 		if err != nil {
 			log.Printf("Failed to store (%s/%s), because\n%s",
 				playerID, authCode, err.Error())
+		} else {
+			at.fastStore(playerID, authCode)
 		}
 	}()
 
@@ -72,6 +74,7 @@ func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
 		if err != nil {
 			return ""
 		} else {
+			at.fastStore(playerID, authCode)
 			return authCode
 		}
 	}
@@ -113,6 +116,7 @@ func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
 		if err != nil {
 			return ""
 		} else {
+			at.fastStore(playerID, authCode)
 			return playerID
 		}
 	}
