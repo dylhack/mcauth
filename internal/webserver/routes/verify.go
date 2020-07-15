@@ -50,12 +50,7 @@ func (server *Server) verifyPlayer(res http.ResponseWriter, req *http.Request) {
 
 func (server *Server) newAuthCode(res http.ResponseWriter, playerID string) {
 	store := server.Store.Auth
-	authCode, err := store.NewAuthCode(playerID)
-
-	if err != nil {
-		res.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	authCode := store.NewAuthCode(playerID)
 
 	response := common.InvalidPlayerAuth{
 		Reason:   common.AuthCode,
