@@ -1,4 +1,4 @@
-## POST /isPlayerValid/\<Player UUID>
+## POST /verify/{Player UUID}
 Possible Errors:
  * [Missing Player UUID Attribute](#Missing-Player-UUID-Attribute)
 
@@ -6,7 +6,7 @@ This endpoint checks if a player is allowed to join the Minecraft server.
 
 Required Headers:
  1. Content-Type: `application/json`
- 2. Authorization: `Bearer <webserver token>` 
+ 2. Authorization: `<webserver token>` 
 
 | Attribute   | Type   | Description             |
 |-------------|--------|-------------------------|
@@ -24,10 +24,9 @@ This means they failed authentication
 
 | Attribute | Type    | Description                                      |
 |-----------|---------|--------------------------------------------------|
-| valid     | boolean | Whether or not the given player is ready to play |
+| verified  | boolean | Whether or not the given player is ready to play |
 | reason    | string  | Possible reasons are described below             |
 
- - "no_link": The Minecraft player hasn't linked their Discord account.
  - "no_role": They fail to have the required roles on Discord to join the
   Minecraft server.
  - "maintenance": The bot is in maintenance mode meaning only admin's can join.
@@ -38,7 +37,7 @@ This means they failed authentication
 #### Invalid Player - Please Auth Response
  | Attribute | Type    | Description                                      |
  |-----------|---------|--------------------------------------------------|
- | valid     | boolean | Whether or not the given player is ready to play |
+ | verified  | boolean | Whether or not the given player is ready to play |
  | reason    | string  | Only is "auth_code"                              |
  | auth_code | string  | The auth code they must provide the Discord bot  |
 
@@ -48,7 +47,7 @@ This means they can play on the Minecraft server.
 
 | Attribute | Type    | Description                                      |
 |-----------|---------|--------------------------------------------------|
-| valid     | boolean | Whether or not the given player is ready to play |
+| verified  | boolean | Whether or not the given player is ready to play |
 
 The valid attribute is a boolean which represents whether the player can
 play on the Minecraft server. This will always return a boolean whether or

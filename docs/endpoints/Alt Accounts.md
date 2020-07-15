@@ -2,17 +2,12 @@
 These endpoints are for enforcing the authenticator to allow players to join
 . In particular administrator alt accounts.
 
-## GET /getAltsOf/:owner
+## GET /alts/{owner}
 Possible Errors:
  * [Missing Owner Attribute](#Missing-Owner-Attribute)
- * [Invalid Owner Attribute Type](#Invalid-Owner-Attribute-Type)
 
-### Request Body
-Required Headers:
- 1. Authorization: `Bearer <webserver token>` 
-
-(empty) The owner attribute is provided in the URL path.
-ie `GET http://127.0.0.1/getAltsOf/notch`
+### Required Headers
+ 1. Authorization: `<webserver token>` 
 
 ### Response Body
 | Attribute | Type     | Description          |
@@ -27,80 +22,57 @@ ie `GET http://127.0.0.1/getAltsOf/notch`
 | alt_id    | string | The Minecraft player UUID alt  |
 
 
-## POST /newAlt
+## POST /alts/{owner}/{player name}
+Add a new alt account associated with an owner
+
 Possible Errors:
  * [Missing Owner Attribute](#Missing-Owner-Attribute)
- * [Invalid Owner Attribute Type](#Invalid-Owner-Attribute-Type)
  * [Invalid Owner](#Invalid-Owner)
  * [Missing Player Name Attribute](#Missing-Player-Name-Attribute)
- * [Invalid Player Name Type Attribute](#Invalid-Player-Name-Attribute-Type)
+ * [Invalid Player Name](#Invalid-Alt-Name)
  * [Alt Already Added Error](#Alt-Already-Added-Error)
 
-### Request Body
-Required Headers:
- 1. Content-Type: `application/json`
- 2. Authorization: `Bearer <webserver token>` 
-
-| Attribute   | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
-| player_name | string | The name of the alt account being claimed |
-| owner       | string | The owner of said alt account             |
+### Required Headers
+ 1. Authorization: `<webserver token>` 
 
 ### Response Body
 Empty (200 OK)
 
-## DELETE /delAlt
+## DELETE /alts/{alt name}
 Possible Errors:
  * [Missing Player Name Attribute](#Missing-Player-Name-Attribute)
- * [Invalid Player Name Type Attribute](#Invalid-Player-Name-Attribute-Type)
+ * [Invalid Player Name](#Invalid-Alt-Name)
 
-### Request Body
+### Required Headers
 Required Headers:
- 1. Content-Type: `application/json`
- 2. Authorization: `Bearer <webserver token>` 
-
-| Attribute   | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
-| player_name | string | The name of the alt account being removed |
-
+ 1. Authorization: `<webserver token>` 
 
 ### Response Body
-| Attribute  | Type    | Description                                |
-|------------|---------|--------------------------------------------|
-| is_deleted | boolean | Whether or not it was successfully removed |
-
+Empty (200 OK)
 
 ## Errors
 
 #### Missing Player Name Attribute
 ```json
 {
-  "errcode": "NO_PLAYER_NAME",
-  "message": "A player name wasn't provided"
+  "errcode": "MISSING_ALT_NAME",
+  "message": "An alt player name wasn't provided"
 }
 ```
 
-#### Invalid Player Name Attribute Type
+### Invalid Alt Name
 ```json
 {
-  "errcode": "PLAYER_TYPE_ERROR",
-  "message": "The player name attribute was not provided as a string"
+  "errcode": "INVALID_ALT_NAME",
+  "message": "The alt account name provided is not a valid player name"
 }
 ```
 
 #### Missing Owner Attribute
 ```json
 {
-  "errcode": "NO_OWNER",
+  "errcode": "MISSING_OWNER",
   "message": "An owner attribute was not provided"
-}
-```
-
-#### Invalid Owner Attribute Type
-```json
-{
-  "errcode": "OWNER_TYPE_ERROR",
-  "message": "The owner attribute provided is not a string type"
 }
 ```
 
