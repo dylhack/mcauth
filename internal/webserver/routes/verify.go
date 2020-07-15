@@ -18,7 +18,7 @@ func (server *Server) verifyPlayer(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// reason possibilities: NotWhitelisted,
-	isValid, reason := server.Bot.ValidatePlayer(playerID)
+	isValid, reason := server.Bot.VerifyPlayer(playerID)
 	log.Printf(
 		`Validating player "%s"
  - Verified: %t

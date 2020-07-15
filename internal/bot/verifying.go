@@ -6,7 +6,7 @@ import (
 )
 
 // if reason is empty and isValid is true then ignore reason
-func (bot *Bot) ValidatePlayer(playerID string) (bool, string) {
+func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 	userID := bot.store.Links.GetDiscordID(playerID)
 
 	if len(userID) == 0 {
