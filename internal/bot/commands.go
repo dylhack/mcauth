@@ -16,7 +16,7 @@ const commands = `These are all the commands:
 `
 
 /* Regular Commands */
-func (bot *Bot) authCMD(msg *dg.MessageCreate, args []string) {
+func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 	// args = [<prefix>, "auth", <auth code>]
 
 	if len(args) < 3 {
@@ -46,7 +46,7 @@ func (bot *Bot) authCMD(msg *dg.MessageCreate, args []string) {
 	}
 }
 
-func (bot *Bot) whoAmI(msg *dg.MessageCreate) {
+func (bot *Bot) cmdWhoAmI(msg *dg.MessageCreate) {
 	playerID := bot.store.Links.GetPlayerID(msg.Author.ID)
 
 	if len(playerID) == 0 {
@@ -63,7 +63,7 @@ func (bot *Bot) whoAmI(msg *dg.MessageCreate) {
 	}
 }
 
-func (bot *Bot) whoIs(msg *dg.MessageCreate, args []string) {
+func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	var playerID, playerName string
 	// first let's see if they mentioned a user
 	if len(msg.Mentions) > 0 {
@@ -129,7 +129,7 @@ func (bot *Bot) whoIs(msg *dg.MessageCreate, args []string) {
 // 2. An admin can unlink someone's account
 // 2.1 Based on Discord user
 // 2.2 Based on Minecraft player name
-func (bot *Bot) UnlinkCMD(msg *dg.MessageCreate, args []string) {
+func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	var err error
 	// 1. Just by saying "unlink" which will unlink the account associated with your account
 	// then -> args should be [<prefix>, unlink]

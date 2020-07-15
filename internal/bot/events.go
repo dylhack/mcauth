@@ -63,16 +63,16 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	switch args[1] {
 	/* User Commands */
 	case "auth":
-		bot.authCMD(msg, args)
+		bot.cmdAuth(msg, args)
 		break
 	case "whoami":
-		bot.whoAmI(msg)
+		bot.cmdWhoAmI(msg)
 		break
 	case "whois":
-		bot.whoIs(msg, args)
+		bot.cmdWhoIs(msg, args)
 		break
 	case "unlink":
-		bot.UnlinkCMD(msg, args)
+		bot.cmdUnlink(msg, args)
 		break
 	case "commands":
 		util.Reply(
