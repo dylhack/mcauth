@@ -1,4 +1,4 @@
-package webserver
+package routes
 
 import (
 	"github.com/dhghf/mcauth/internal/common"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (s *Server) isPlayerValid(res http.ResponseWriter, req *http.Request) {
+func (server *Server) verifyPlayer(res http.ResponseWriter, req *http.Request) {
 	args := mux.Vars(req)
 
 	playerID, isOK := args["playerID"]
@@ -18,16 +18,16 @@ func (s *Server) isPlayerValid(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// reason possibilities: NotWhitelisted,
-	isValid, reason := s.bot.ValidatePlayer(playerID)
+	isValid, reason := server.Bot.ValidatePlayer(playerID)
 	log.Printf(
 		`Validating player "%s"
- - Valid: %t
+ - Verified: %t
  - Reason: %s`, playerID, isValid, reason,
 	)
 
 	if isValid {
 		response := common.ValidPlayer{
-			Valid: true,
+			Verified: true,
 		}
 		Ship(res, response)
 		return
@@ -36,20 +36,21 @@ func (s *Server) isPlayerValid(res http.ResponseWriter, req *http.Request) {
 	// if the reason was "no link" then check if they have a pending authentication code.
 	// If they don't have one then make a new one
 	if reason == common.NoLink {
-		s.newAuthCode(res, playerID)
+		server.newAuthCode(res, playerID)
 		return
 	}
 
 	// for other reasons just tell the client what went wrong
 	response := common.InvalidPlayer{
-		Valid:  false,
-		Reason: reason,
+		Verified: false,
+		Reason:   reason,
 	}
 	Ship(res, response)
 }
 
-func (s *Server) newAuthCode(res http.ResponseWriter, playerID string) {
-	authCode, err := s.store.Auth.NewAuthCode(playerID)
+func (server *Server) newAuthCode(res http.ResponseWriter, playerID string) {
+	store := server.Store.Auth
+	authCode, err := store.NewAuthCode(playerID)
 
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -58,7 +59,7 @@ func (s *Server) newAuthCode(res http.ResponseWriter, playerID string) {
 
 	response := common.InvalidPlayerAuth{
 		Reason:   common.AuthCode,
-		Valid:    false,
+		Verified: false,
 		AuthCode: authCode,
 	}
 	Ship(res, response)

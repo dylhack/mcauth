@@ -13,14 +13,14 @@ type ErrorResponse struct {
 
 // this describes why a player isn't valid
 type InvalidPlayer struct {
-	Valid  bool   `json:"valid"`
-	Reason string `json:"reason"`
+	Verified bool   `json:"valid"`
+	Reason   string `json:"reason"`
 }
 
 // this gives the minecraft server the provided player's pending authentication code.
 type InvalidPlayerAuth struct {
 	Reason   string `json:"reason"`
-	Valid    bool   `json:"valid"`
+	Verified bool   `json:"valid"`
 	AuthCode string `json:"auth_code"`
 }
 
@@ -34,11 +34,16 @@ const (
 
 // this says that the provided player is valid and ready to join the Minecraft server.
 type ValidPlayer struct {
-	Valid bool `json:"valid"`
+	Verified bool `json:"valid"`
 }
 
 /* getAltsOf possible responses */
 type AltsOfResponse struct {
+	Accounts []db.AltAcc `json:"alt_accs"`
+	Owner    string      `json:"owner"`
+}
+
+type AllAltsResponse struct {
 	Accounts []db.AltAcc `json:"alt_accs"`
 }
 

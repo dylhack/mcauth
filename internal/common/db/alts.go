@@ -27,11 +27,15 @@ func GetAltsTable(db *sql.DB) AltsTable {
 }
 
 func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) error {
-	prep, _ := at.db.Prepare(
+	prep, err := at.db.Prepare(
 		"INSERT INTO alts (owner, player_id, player_name) VALUES (?,?,?)",
 	)
 
-	_, err := prep.Exec(owner, playerID, playerName)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = prep.Exec(owner, playerID, playerName)
 
 	if err != nil {
 		log.Printf(
@@ -57,28 +61,59 @@ func (at *AltsTable) RemAlt(identifier string) error {
 	return err
 }
 
-// get all the current stored alt accounts.
-func (at *AltsTable) GetAlt(identifier string) (result []AltAcc, err error) {
-	prep, _ := at.db.Prepare(
-		"SELECT * FROM alts (player_name, player_id, owner) WHERE player_id=? OR player_name=?",
-	)
-	rows, err := prep.Query(identifier, identifier)
+func (at *AltsTable) GetAllAlts() (result []AltAcc) {
+	rows, err := at.db.Query("SELECT * FROM alts")
+
+	if err != nil {
+		panic(err)
+	}
+
 	row := AltAcc{}
+	result = []AltAcc{}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&row.PlayerID, &row.PlayerName, &row.Owner)
+
+		if err != nil {
+			log.Printf("Failed scan an alt of all alts, because\n%s", err.Error())
+			continue
+		}
+		result = append(result, row)
+	}
+
+	return result
+}
+
+// get all the current stored alt accounts of an owner.
+func (at *AltsTable) GetAltsOf(owner string) (result []AltAcc, err error) {
+	prep, err := at.db.Prepare(
+		"SELECT * FROM alts WHERE owner=?",
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	rows, err := prep.Query(owner)
+	row := AltAcc{}
+	result = []AltAcc{}
 
 	if err != nil {
 		log.Printf("Failed to get all for \"%s\", because\n%s",
-			identifier, err.Error())
+			owner, err.Error())
 		return result, err
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&row.PlayerName, &row.PlayerID, &row.Owner)
+		err = rows.Scan(&row.PlayerID, &row.PlayerName, &row.Owner)
 
 		if err != nil {
 			log.Printf("Failed to scan \"%s\", because\n%s",
-				identifier, err.Error())
+				owner, err.Error())
 			continue
 		}
 		result = append(result, row)
