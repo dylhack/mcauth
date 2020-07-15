@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	c "github.com/dhghf/mcauth/internal/common"
 	"log"
 )
@@ -29,6 +30,33 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 	// if they're an admin then they pass all exceptions
 	if hasAdmin {
 		return true, "Administrator"
+	}
+
+	// Check if they're an alt account
+	altAcc := bot.store.Alts.GetAlt(playerID)
+
+	if len(altAcc.Owner) > 0 {
+		discordID := bot.store.Links.GetDiscordID(altAcc.Owner)
+
+		if len(discordID) > 0 {
+			member, err := bot.client.GuildMember(
+				bot.config.Guild,
+				discordID,
+			)
+
+			if err == nil {
+				isWhitelisted, _ = bot.CheckRoles(member.Roles)
+
+				// check if the owner of the alt account is whitelisted
+				if isWhitelisted {
+					return true, fmt.Sprintf(
+						"Alt account of %s#%s",
+						member.User.Username,
+						member.User.Discriminator,
+					)
+				}
+			}
+		}
 	}
 
 	// if they're a regular user then check if they have the right roles

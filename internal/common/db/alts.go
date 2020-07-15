@@ -86,6 +86,36 @@ func (at *AltsTable) GetAllAlts() (result []AltAcc) {
 	return result
 }
 
+func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
+	prep, err := at.db.Prepare(
+		"SELECT * FROM alts WHERE player_id=?",
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	rows, err := prep.Query(playerID)
+
+	if err != nil {
+		log.Printf("Failed to get alt \"%s\", because\n%s",
+			playerID, err.Error())
+		return AltAcc{}
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&result.PlayerID, &result.PlayerName, &result.Owner)
+
+		if err != nil {
+			log.Printf("Failed to scan alt \"%s\", because\n%s",
+				playerID, err.Error())
+			continue
+		}
+		return result
+	}
+	return AltAcc{}
+}
+
 // get all the current stored alt accounts of an owner.
 func (at *AltsTable) GetAltsOf(owner string) (result []AltAcc, err error) {
 	prep, err := at.db.Prepare(
