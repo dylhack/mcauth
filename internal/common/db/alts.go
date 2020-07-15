@@ -6,7 +6,8 @@ import (
 )
 
 type AltsTable struct {
-	db *sql.DB
+	db   *sql.DB
+	fast map[string]*AltAcc
 }
 
 type AltAcc struct {
@@ -42,6 +43,14 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 			"Failed to insert (%s/%s/%s), because\n%s\n",
 			owner, playerID, playerName, err.Error(),
 		)
+		go at.fastStore(
+			playerID,
+			&AltAcc{
+				Owner:      owner,
+				PlayerID:   playerID,
+				PlayerName: playerName,
+			},
+		)
 	}
 
 	return err
@@ -57,6 +66,8 @@ func (at *AltsTable) RemAlt(identifier string) error {
 			"Failed to delete (%s), because\n%s\n",
 			identifier, err.Error(),
 		)
+	} else {
+		go at.fastRemove(identifier)
 	}
 	return err
 }
@@ -87,6 +98,12 @@ func (at *AltsTable) GetAllAlts() (result []AltAcc) {
 }
 
 func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
+	altAcc := at.fastLoad(playerID)
+
+	if altAcc != nil {
+		return *altAcc
+	}
+
 	prep, err := at.db.Prepare(
 		"SELECT * FROM alts WHERE player_id=?",
 	)
@@ -111,6 +128,7 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
 				playerID, err.Error())
 			continue
 		}
+		go at.fastStore(playerID, &result)
 		return result
 	}
 	return AltAcc{}
@@ -150,4 +168,16 @@ func (at *AltsTable) GetAltsOf(owner string) (result []AltAcc, err error) {
 	}
 
 	return result, nil
+}
+
+func (at *AltsTable) fastStore(playerID string, acc *AltAcc) {
+	at.fast[playerID] = acc
+}
+
+func (at *AltsTable) fastLoad(playerID string) *AltAcc {
+	return at.fast[playerID]
+}
+
+func (at *AltsTable) fastRemove(playerID string) {
+	delete(at.fast, playerID)
 }
