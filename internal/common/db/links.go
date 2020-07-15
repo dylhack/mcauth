@@ -6,7 +6,8 @@ import (
 )
 
 type LinksTable struct {
-	db *sql.DB
+	db   *sql.DB
+	fast map[string]string
 }
 
 func GetLinksTable(db *sql.DB) LinksTable {
@@ -15,7 +16,10 @@ func GetLinksTable(db *sql.DB) LinksTable {
 	if err != nil {
 		log.Fatalln("Failed to init authentication table\n" + err.Error())
 	}
-	return LinksTable{db: db}
+	return LinksTable{
+		db:   db,
+		fast: map[string]string{},
+	}
 }
 
 func (lt *LinksTable) SetLink(discordID string, playerID string) error {
@@ -34,6 +38,8 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 				"Failed to set (%s/%s), because\n%s\n",
 				discordID, playerID, err.Error(),
 			)
+		} else {
+			go lt.fastStore(playerID, discordID)
 		}
 
 		return err
@@ -51,6 +57,8 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 			"Failed to insert (%s/%s), because\n%s\n",
 			discordID, playerID, err.Error(),
 		)
+	} else {
+		go lt.fastStore(playerID, discordID)
 	}
 
 	return err
@@ -65,12 +73,20 @@ func (lt *LinksTable) UnLink(identifier string) error {
 			"Failed to remove (%s), because\n%s\n",
 			identifier, err.Error(),
 		)
+	} else {
+		lt.fastRemove(identifier)
 	}
 
 	return err
 }
 
 func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
+	playerID, isOK := lt.fastLoad(discordID)
+
+	if isOK {
+		return playerID
+	}
+
 	prep, _ := lt.db.Prepare(
 		"SELECT player_id FROM links WHERE discord_id=?",
 	)
@@ -95,6 +111,7 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 			)
 			return ""
 		} else {
+			go lt.fastStore(playerID, discordID)
 			return playerID
 		}
 	}
@@ -102,6 +119,12 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 }
 
 func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
+	discordID, isOK := lt.fastLoad(playerID)
+
+	if isOK {
+		return discordID
+	}
+
 	prep, _ := lt.db.Prepare(
 		"SELECT discord_id FROM links WHERE player_id=?",
 	)
@@ -125,8 +148,33 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
 			)
 			return ""
 		} else {
+			go lt.fastStore(discordID, playerID)
 			return discordID
 		}
 	}
 	return ""
+}
+
+func (lt *LinksTable) fastStore(playerID string, discordID string) {
+	lt.fast[playerID] = discordID
+	lt.fast[discordID] = playerID
+}
+
+func (lt *LinksTable) fastRemove(identifier string) {
+	discordID, isOK := lt.fast[identifier]
+	if isOK {
+		delete(lt.fast, discordID)
+		delete(lt.fast, identifier)
+	} else {
+		playerID, isOK := lt.fast[identifier]
+		if isOK {
+			delete(lt.fast, identifier)
+			delete(lt.fast, playerID)
+		}
+	}
+}
+
+func (lt *LinksTable) fastLoad(identifier string) (string, bool) {
+	result, isOK := lt.fast[identifier]
+	return result, isOK
 }
