@@ -11,7 +11,7 @@ type LinksTable struct {
 }
 
 func GetLinksTable(db *sql.DB) LinksTable {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS links (discord_id TEXT UNIQUE NOT NULL, player_id TEXT UNIQUE NOT NULL)")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS account_links (discord_id TEXT UNIQUE NOT NULL, player_id TEXT UNIQUE NOT NULL)")
 
 	if err != nil {
 		log.Fatalln("Failed to init authentication table\n" + err.Error())
@@ -28,7 +28,7 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 
 	if len(oldID) > 0 {
 		prep, _ := lt.db.Prepare(
-			"UPDATE links SET discord_id=? AND player_id=? WHERE discord_id=? OR player_id=?",
+			"UPDATE account_links SET discord_id=? AND player_id=? WHERE discord_id=? OR player_id=?",
 		)
 
 		_, err := prep.Exec(discordID, playerID, discordID, playerID)
@@ -49,7 +49,7 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 }
 
 func (lt *LinksTable) NewLink(discordID string, playerID string) error {
-	prep, _ := lt.db.Prepare("INSERT INTO links (discord_id, player_id) VALUES (?,?)")
+	prep, _ := lt.db.Prepare("INSERT INTO account_links (discord_id, player_id) VALUES (?,?)")
 	_, err := prep.Exec(discordID, playerID)
 
 	if err != nil {
@@ -65,7 +65,7 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 }
 
 func (lt *LinksTable) UnLink(identifier string) error {
-	prep, _ := lt.db.Prepare("DELETE FROM links WHERE discord_id=? OR player_id=?")
+	prep, _ := lt.db.Prepare("DELETE FROM account_links WHERE discord_id=? OR player_id=?")
 	_, err := prep.Exec(identifier, identifier)
 
 	if err != nil {
@@ -88,7 +88,7 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 	}
 
 	prep, _ := lt.db.Prepare(
-		"SELECT player_id FROM links WHERE discord_id=?",
+		"SELECT player_id FROM account_links WHERE discord_id=?",
 	)
 
 	rows, err := prep.Query(discordID)
@@ -126,7 +126,7 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
 	}
 
 	prep, _ := lt.db.Prepare(
-		"SELECT discord_id FROM links WHERE player_id=?",
+		"SELECT discord_id FROM account_links WHERE player_id=?",
 	)
 
 	rows, err := prep.Query(playerID)
