@@ -39,6 +39,7 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 				discordID, playerID, err.Error(),
 			)
 		} else {
+			prep.Close()
 			go lt.fastStore(playerID, discordID)
 		}
 
@@ -74,6 +75,7 @@ func (lt *LinksTable) UnLink(identifier string) error {
 			identifier, err.Error(),
 		)
 	} else {
+		prep.Close()
 		lt.fastRemove(identifier)
 	}
 
@@ -125,11 +127,16 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string) {
 		return discordID
 	}
 
-	prep, _ := lt.db.Prepare(
+	prep, err := lt.db.Prepare(
 		"SELECT discord_id FROM account_links WHERE player_id=?",
 	)
+	if err != nil {
+		panic(err)
+	}
 
 	rows, err := prep.Query(playerID)
+
+	defer prep.Close()
 
 	if err != nil {
 		log.Printf("Failed to get \"%s\"'s player ID, because\n%s\n", playerID, err.Error())

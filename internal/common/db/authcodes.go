@@ -42,6 +42,8 @@ func (at *AuthTable) NewAuthCode(playerID string) (authCode string) {
 
 		_, err := prep.Exec(authCode, playerID)
 
+		defer prep.Close()
+
 		if err != nil {
 			log.Printf("Failed to store (%s/%s), because\n%s",
 				playerID, authCode, err.Error())
@@ -124,9 +126,13 @@ func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
 }
 
 func (at *AuthTable) RemoveCode(authCode string) {
-	prep, _ := at.db.Prepare("DELETE FROM auth_codes WHERE auth_code=?")
+	prep, err := at.db.Prepare("DELETE FROM auth_codes WHERE auth_code=?")
+	if err != nil {
+		panic(err)
+	}
 
-	_, err := prep.Exec(authCode)
+	defer prep.Close()
+	_, err = prep.Exec(authCode)
 
 	if err != nil {
 		log.Printf(
