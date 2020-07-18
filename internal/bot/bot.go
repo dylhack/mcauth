@@ -26,7 +26,7 @@ func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 		client: client,
 		store:  store,
 		config: config,
-		locked: true,
+		locked: false,
 	}
 
 	client.AddHandler(bot.OnMessage)
