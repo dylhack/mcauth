@@ -71,7 +71,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		playerID = bot.store.Links.GetPlayerID(user.ID)
 
 		if len(playerID) == 0 {
-			util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
+			util.Reply(bot.client, msg.Message, "I don't know that user.")
 			return
 		}
 		playerName = common.GetPlayerName(playerID)
