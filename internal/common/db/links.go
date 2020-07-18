@@ -27,11 +27,16 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 	oldID := lt.GetPlayerID(discordID)
 
 	if len(oldID) > 0 {
-		prep, _ := lt.db.Prepare(
+		prep, err := lt.db.Prepare(
 			"UPDATE account_links SET discord_id=? AND player_id=? WHERE discord_id=? OR player_id=?",
 		)
 
-		_, err := prep.Exec(discordID, playerID, discordID, playerID)
+		if err != nil {
+			panic(err)
+		}
+		defer prep.Close()
+
+		_, err = prep.Exec(discordID, playerID, discordID, playerID)
 
 		if err != nil {
 			log.Printf(
@@ -39,7 +44,6 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 				discordID, playerID, err.Error(),
 			)
 		} else {
-			prep.Close()
 			go lt.fastStore(playerID, discordID)
 		}
 
@@ -50,8 +54,14 @@ func (lt *LinksTable) SetLink(discordID string, playerID string) error {
 }
 
 func (lt *LinksTable) NewLink(discordID string, playerID string) error {
-	prep, _ := lt.db.Prepare("INSERT INTO account_links (discord_id, player_id) VALUES (?,?)")
-	_, err := prep.Exec(discordID, playerID)
+	prep, err := lt.db.Prepare("INSERT INTO account_links (discord_id, player_id) VALUES (?,?)")
+
+	if err != nil {
+		panic(err)
+	}
+	defer prep.Close()
+
+	_, err = prep.Exec(discordID, playerID)
 
 	if err != nil {
 		log.Printf(
@@ -66,8 +76,15 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 }
 
 func (lt *LinksTable) UnLink(identifier string) error {
-	prep, _ := lt.db.Prepare("DELETE FROM account_links WHERE discord_id=? OR player_id=?")
-	_, err := prep.Exec(identifier, identifier)
+	prep, err := lt.db.Prepare("DELETE FROM account_links WHERE discord_id=? OR player_id=?")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer prep.Close()
+
+	_, err = prep.Exec(identifier, identifier)
 
 	if err != nil {
 		log.Printf(
@@ -89,9 +106,14 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string) {
 		return playerID
 	}
 
-	prep, _ := lt.db.Prepare(
+	prep, err := lt.db.Prepare(
 		"SELECT player_id FROM account_links WHERE discord_id=?",
 	)
+
+	if err != nil {
+		panic(err)
+	}
+	defer prep.Close()
 
 	rows, err := prep.Query(discordID)
 

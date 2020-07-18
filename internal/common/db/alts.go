@@ -39,6 +39,7 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 		panic(err)
 	}
 
+	defer prep.Close()
 	_, err = prep.Exec(owner, playerID, playerName)
 
 	if err != nil {
@@ -63,6 +64,7 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 func (at *AltsTable) RemAlt(identifier string) error {
 	prep, _ := at.db.Prepare("DELETE FROM alts WHERE player_id=? OR player_name=?")
 	_, err := prep.Exec(identifier, identifier)
+	defer prep.Close()
 
 	if err != nil {
 		log.Printf(
@@ -84,7 +86,6 @@ func (at *AltsTable) GetAllAlts() (result []AltAcc) {
 
 	row := AltAcc{}
 	result = []AltAcc{}
-
 	defer rows.Close()
 
 	for rows.Next() {
@@ -110,11 +111,11 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
 	prep, err := at.db.Prepare(
 		"SELECT * FROM alts WHERE player_id=?",
 	)
-
 	if err != nil {
 		panic(err)
 	}
 
+	defer prep.Close()
 	rows, err := prep.Query(playerID)
 
 	if err != nil {
@@ -146,6 +147,8 @@ func (at *AltsTable) GetAltsOf(owner string) (result []AltAcc, err error) {
 	if err != nil {
 		panic(err)
 	}
+
+	defer prep.Close()
 
 	rows, err := prep.Query(owner)
 	row := AltAcc{}

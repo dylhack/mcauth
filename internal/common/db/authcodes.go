@@ -37,20 +37,18 @@ func (at *AuthTable) NewAuthCode(playerID string) (authCode string) {
 	newUUID := uuid.New()
 	authCode = strings.Split(newUUID.String(), "-")[0]
 
-	go func() {
-		prep, _ := at.db.Prepare("INSERT INTO auth_codes (auth_code, player_id) VALUES (?,?)")
+	prep, _ := at.db.Prepare("INSERT INTO auth_codes (auth_code, player_id) VALUES (?,?)")
 
-		_, err := prep.Exec(authCode, playerID)
+	_, err := prep.Exec(authCode, playerID)
 
-		defer prep.Close()
+	defer prep.Close()
 
-		if err != nil {
-			log.Printf("Failed to store (%s/%s), because\n%s",
-				playerID, authCode, err.Error())
-		} else {
-			at.fastStore(playerID, authCode)
-		}
-	}()
+	if err != nil {
+		log.Printf("Failed to store (%s/%s), because\n%s",
+			playerID, authCode, err.Error())
+	} else {
+		at.fastStore(playerID, authCode)
+	}
 
 	return authCode
 }
@@ -68,6 +66,7 @@ func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
 		return ""
 	}
 
+	defer prep.Close()
 	defer rows.Close()
 
 	for rows.Next() {
