@@ -19,6 +19,7 @@ func GetStore(dbPath string) (c Store) {
 	if err != nil {
 		log.Fatalln("Failed to SQLite database\n" + err.Error())
 	}
+	db.SetMaxOpenConns(1)
 
 	c.db = db
 	c.Alts = GetAltsTable(db)
