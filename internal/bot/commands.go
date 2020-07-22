@@ -222,8 +222,12 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		adminRoles, whitelisted,
 	}
 
-	bot.client.ChannelMessageSendEmbed(
+	_, err := bot.client.ChannelMessageSendEmbed(
 		msg.ChannelID,
 		&embed,
 	)
+
+	if err != nil {
+		log.Println("Failed to send status", err.Error())
+	}
 }
