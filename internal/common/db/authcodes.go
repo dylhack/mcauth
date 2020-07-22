@@ -13,6 +13,11 @@ type AuthTable struct {
 	fast map[string]string
 }
 
+type AuthCode struct {
+	AuthCode string
+	PlayerID string
+}
+
 func GetAuthTable(db *sql.DB) AuthTable {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS auth_codes (auth_code TEXT UNIQUE NOT NULL, player_id TEXT PRIMARY KEY NOT NULL)")
 
@@ -23,6 +28,29 @@ func GetAuthTable(db *sql.DB) AuthTable {
 		db:   db,
 		fast: map[string]string{},
 	}
+}
+
+func (at *AuthTable) GetAllAuthCodes() (authCodes []AuthCode) {
+	rows, err := at.db.Query("SELECT * FROM auth_codes")
+
+	if err != nil {
+		log.Println("Failed to get all auth codes", err.Error())
+		return authCodes
+	}
+
+	for rows.Next() {
+		var authCode AuthCode
+
+		err = rows.Scan(&authCode.AuthCode, &authCode.PlayerID)
+
+		if err != nil {
+			log.Printf("Failed to scan an account because %s\n", err.Error())
+		} else {
+			authCodes = append(authCodes, authCode)
+		}
+	}
+
+	return authCodes
 }
 
 // create a new authorization code. If the player already has an authorization code it will be
