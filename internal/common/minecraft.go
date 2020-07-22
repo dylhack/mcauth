@@ -60,7 +60,7 @@ func GetPlayerID(playerName string) string {
 	)
 
 	if err != nil {
-		log.Printf("Failed to get \"%s\" player ID because\n"+err.Error(), playerName)
+		log.Printf("Failed to get \"%s\" player ID because\n%s\n", playerName, err.Error())
 		return ""
 	}
 
