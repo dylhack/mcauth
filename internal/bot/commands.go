@@ -13,6 +13,7 @@ const commands = `These are all the commands:
  - {prefix} help
  - {prefix} whoami
  - {prefix} whois <player name or @ Discord user>
+ - {prefix} status
 `
 
 /* Regular Commands */
