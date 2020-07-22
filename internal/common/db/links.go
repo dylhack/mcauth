@@ -36,7 +36,7 @@ func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc) {
 	rows, err := prep.Query()
 
 	if err != nil {
-		log.Println("Failed to get ", err.Error())
+		log.Println("Failed to get all account links because ", err.Error())
 		return linkedList
 	}
 	prep.Close()
