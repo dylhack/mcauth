@@ -11,6 +11,11 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 
 	// check if they're an alt account
 	if len(alt.Owner) > 0 {
+		log.Printf(
+			"%s (%s) is an alt account of %s\n",
+			alt.PlayerName, alt.PlayerID,
+			alt.Owner,
+		)
 		userID := bot.store.Links.GetDiscordID(playerID)
 		return bot.VerifyDiscordUser(userID)
 	}
