@@ -39,6 +39,8 @@ func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc) {
 		log.Println("Failed to get ", err.Error())
 		return linkedList
 	}
+	prep.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		var linked LinkedAcc
