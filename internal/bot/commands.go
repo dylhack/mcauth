@@ -178,7 +178,7 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 
 // See the status of the bot
 func (bot *Bot) cmdStatus(msg *dg.Message) {
-	embed := dg.MessageEmbed{
+	embed := &dg.MessageEmbed{
 		Title: "MCAuth Status",
 		URL:   "https://github.com/dhghf/mcauth",
 		Author: &dg.MessageEmbedAuthor{
@@ -189,9 +189,10 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		Color: 0xfc4646,
 	}
 
+	playerCount := bot.getPlayersOnline()
 	playersOnline := &dg.MessageEmbedField{
 		Name:   "Players Online",
-		Value:  strconv.Itoa(bot.getPlayersOnline()),
+		Value:  strconv.Itoa(playerCount),
 		Inline: true,
 	}
 
@@ -230,7 +231,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 
 	_, err := bot.client.ChannelMessageSendEmbed(
 		msg.ChannelID,
-		&embed,
+		embed,
 	)
 
 	if err != nil {
