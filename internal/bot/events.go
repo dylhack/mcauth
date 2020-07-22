@@ -81,6 +81,13 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		)
 		break
 	/* Administrator Commands */
+	case "status":
+		if isAdmin {
+			bot.cmdStatus(msg.Message)
+		} else {
+			adminAttempt = true
+		}
+		break
 	case "lock":
 		if isAdmin {
 			bot.locked = true
@@ -101,7 +108,6 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		util.Reply(bot.client, msg.Message, bot.config.Help)
 		break
 	}
-
 	if adminAttempt {
 		util.Reply(bot.client, msg.Message,
 			"You must be an administrator to run this command.",

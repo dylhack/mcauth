@@ -10,6 +10,11 @@ type LinksTable struct {
 	fast map[string]string
 }
 
+type LinkedAcc struct {
+	DiscordID string
+	PlayerID  string
+}
+
 func GetLinksTable(db *sql.DB) LinksTable {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS account_links (discord_id TEXT UNIQUE NOT NULL, player_id TEXT UNIQUE NOT NULL)")
 
@@ -20,6 +25,34 @@ func GetLinksTable(db *sql.DB) LinksTable {
 		db:   db,
 		fast: map[string]string{},
 	}
+}
+
+func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc) {
+	prep, err := lt.db.Prepare("SELECT * FROM account_links")
+	if err != nil {
+		panic(err)
+	}
+
+	rows, err := prep.Query()
+
+	if err != nil {
+		log.Println("Failed to get ", err.Error())
+		return linkedList
+	}
+
+	for rows.Next() {
+		var linked LinkedAcc
+
+		err = rows.Scan(&linked.DiscordID, &linked.PlayerID)
+
+		if err != nil {
+			log.Printf("Failed to scan an account because %s\n", err.Error())
+		} else {
+			linkedList = append(linkedList, linked)
+		}
+	}
+
+	return linkedList
 }
 
 func (lt *LinksTable) SetLink(discordID string, playerID string) error {

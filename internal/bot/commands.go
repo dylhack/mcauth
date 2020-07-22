@@ -174,4 +174,55 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	}
 }
 
-/* Administrator Commands */
+// See the status of the bot
+func (bot *Bot) cmdStatus(msg *dg.Message) {
+	embed := dg.MessageEmbed{
+		Title: "MCAuth Status",
+		URL:   "https://github.com/dhghf/mcauth",
+		Author: &dg.MessageEmbedAuthor{
+			URL:     "https://github.com/dhghf",
+			Name:    "dhghf",
+			IconURL: "https://avatars3.githubusercontent.com/u/27179786?s=400&u=f407d9552a9ada044d23d8235d3f183efd9082a0&v=4",
+		},
+		Color: 0xfc4646,
+	}
+
+	playersOnline := &dg.MessageEmbedField{
+		Name:   "Players Online",
+		Value:  "",
+		Inline: true,
+	}
+
+	linkedAccounts := &dg.MessageEmbedField{
+		Name:   "Linked Accounts",
+		Value:  "",
+		Inline: true,
+	}
+
+	pendingAuthCodes := &dg.MessageEmbedField{
+		Name:   "Pending Auth Codes",
+		Value:  "",
+		Inline: true,
+	}
+
+	adminRoles := &dg.MessageEmbedField{
+		Name:   "Whitelisted Roles",
+		Value:  "",
+		Inline: true,
+	}
+	whitelisted := &dg.MessageEmbedField{
+		Name:   "Admin Roles",
+		Value:  "",
+		Inline: true,
+	}
+
+	embed.Fields = []*dg.MessageEmbedField{
+		playersOnline, linkedAccounts, pendingAuthCodes,
+		adminRoles, whitelisted,
+	}
+
+	bot.client.ChannelMessageSendEmbed(
+		msg.ChannelID,
+		&embed,
+	)
+}
