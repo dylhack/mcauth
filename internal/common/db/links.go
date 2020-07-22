@@ -57,13 +57,13 @@ func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc) {
 	return linkedList
 }
 
-func (lt *LinksTable) SetLink(discordID string, playerID string) error {
+func (lt *LinksTable) SetLink(discordID, playerID string) error {
 	// check if they already have a link
 	oldID := lt.GetPlayerID(discordID)
 
 	if len(oldID) > 0 {
 		prep, err := lt.db.Prepare(
-			"UPDATE account_links SET discord_id=? AND player_id=? WHERE discord_id=? OR player_id=?",
+			"UPDATE account_links SET discord_id=?, player_id=? WHERE discord_id=? OR player_id=?",
 		)
 
 		if err != nil {
