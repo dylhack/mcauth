@@ -12,6 +12,12 @@ func (bot *Bot) getLinkedAccounts() int {
 	return len(linked)
 }
 
+func (bot *Bot) getPendingAuthCodes() int {
+	authCodes := bot.store.Auth.GetAllAuthCodes()
+
+	return len(authCodes)
+}
+
 // output:
 // - role name 1
 // - role name 2

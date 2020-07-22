@@ -6,6 +6,7 @@ import (
 	dg "github.com/bwmarrin/discordgo"
 	"github.com/dhghf/mcauth/internal/common"
 	"log"
+	"strconv"
 )
 
 const commands = `These are all the commands:
@@ -190,30 +191,35 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 
 	playersOnline := &dg.MessageEmbedField{
 		Name:   "Players Online",
-		Value:  "",
+		Value:  strconv.Itoa(bot.getPlayersOnline()),
 		Inline: true,
 	}
 
+	linkedAccCount := bot.getLinkedAccounts()
 	linkedAccounts := &dg.MessageEmbedField{
 		Name:   "Linked Accounts",
-		Value:  "",
+		Value:  strconv.Itoa(linkedAccCount),
 		Inline: true,
 	}
 
+	allPending := bot.getPendingAuthCodes()
 	pendingAuthCodes := &dg.MessageEmbedField{
 		Name:   "Pending Auth Codes",
-		Value:  "",
+		Value:  strconv.Itoa(allPending),
 		Inline: true,
 	}
 
-	adminRoles := &dg.MessageEmbedField{
+	whitelistedList := bot.getWhitelistedRoles()
+	whitelisted := &dg.MessageEmbedField{
 		Name:   "Whitelisted Roles",
-		Value:  "",
+		Value:  whitelistedList,
 		Inline: true,
 	}
-	whitelisted := &dg.MessageEmbedField{
+
+	adminRolesList := bot.getAdminRoles()
+	adminRoles := &dg.MessageEmbedField{
 		Name:   "Admin Roles",
-		Value:  "",
+		Value:  adminRolesList,
 		Inline: true,
 	}
 
