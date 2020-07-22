@@ -16,7 +16,7 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 			alt.PlayerName, alt.PlayerID,
 			alt.Owner,
 		)
-		userID := bot.store.Links.GetDiscordID(playerID)
+		userID := bot.store.Links.GetDiscordID(alt.Owner)
 		return bot.VerifyDiscordUser(userID)
 	}
 
