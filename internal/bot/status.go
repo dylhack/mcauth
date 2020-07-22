@@ -2,6 +2,12 @@ package bot
 
 import "fmt"
 
+func (bot *Bot) getAltAccounts() int {
+	alts := bot.store.Alts.GetAllAlts()
+
+	return len(alts)
+}
+
 func (bot *Bot) getPlayersOnline() int {
 	return 0
 }
@@ -33,7 +39,7 @@ func (bot *Bot) getWhitelistedRoles() string {
 	for _, role := range roles {
 		for _, roleID := range bot.config.Whitelist {
 			if roleID == role.ID {
-				list += fmt.Sprintf(" * %s\n", role.Name)
+				list += fmt.Sprintf("%s\n", role.Name)
 				break
 			}
 		}
@@ -61,7 +67,7 @@ func (bot *Bot) getAdminRoles() string {
 	for _, role := range roles {
 		for _, roleID := range bot.config.AdminRoles {
 			if roleID == role.ID {
-				list += fmt.Sprintf(" * %s\n", role.Name)
+				list += fmt.Sprintf("%s\n", role.Name)
 				break
 			}
 		}
