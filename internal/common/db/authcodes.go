@@ -38,6 +38,8 @@ func (at *AuthTable) GetAllAuthCodes() (authCodes []AuthCode) {
 		return authCodes
 	}
 
+	defer rows.Close()
+
 	for rows.Next() {
 		var authCode AuthCode
 
