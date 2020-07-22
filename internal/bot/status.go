@@ -2,23 +2,23 @@ package bot
 
 import "fmt"
 
-func (bot *Bot) getAltAccounts() int {
+func (bot *Bot) countAltAccounts() int {
 	alts := bot.store.Alts.GetAllAlts()
 
 	return len(alts)
 }
 
-func (bot *Bot) getPlayersOnline() int {
+func (bot *Bot) countPlayersOnline() int {
 	return 0
 }
 
-func (bot *Bot) getLinkedAccounts() int {
+func (bot *Bot) countLinkedAccounts() int {
 	linked := bot.store.Links.GetAllLinks()
 
 	return len(linked)
 }
 
-func (bot *Bot) getPendingAuthCodes() int {
+func (bot *Bot) countPendingAuthCodes() int {
 	authCodes := bot.store.Auth.GetAllAuthCodes()
 
 	return len(authCodes)

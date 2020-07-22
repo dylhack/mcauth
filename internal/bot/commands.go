@@ -189,24 +189,31 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		Color: 0xfc4646,
 	}
 
-	playerCount := bot.getPlayersOnline()
+	playerCount := bot.countPlayersOnline()
 	playersOnline := &dg.MessageEmbedField{
 		Name:   "Players Online",
 		Value:  strconv.Itoa(playerCount),
 		Inline: true,
 	}
 
-	linkedAccCount := bot.getLinkedAccounts()
+	linkedAccCount := bot.countLinkedAccounts()
 	linkedAccounts := &dg.MessageEmbedField{
 		Name:   "Linked Accounts",
 		Value:  strconv.Itoa(linkedAccCount),
 		Inline: true,
 	}
 
-	allPending := bot.getPendingAuthCodes()
+	allPending := bot.countPendingAuthCodes()
 	pendingAuthCodes := &dg.MessageEmbedField{
 		Name:   "Pending Auth Codes",
 		Value:  strconv.Itoa(allPending),
+		Inline: true,
+	}
+
+	altAccsCount := bot.countAltAccounts()
+	altAccsField := &dg.MessageEmbedField{
+		Name:   "Alt Accounts",
+		Value:  strconv.Itoa(altAccsCount),
 		Inline: true,
 	}
 
@@ -226,7 +233,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 
 	embed.Fields = []*dg.MessageEmbedField{
 		playersOnline, linkedAccounts, pendingAuthCodes,
-		adminRoles, whitelisted,
+		altAccsField, adminRoles, whitelisted,
 	}
 
 	_, err := bot.client.ChannelMessageSendEmbed(
