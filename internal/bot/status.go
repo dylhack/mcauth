@@ -24,13 +24,25 @@ func (bot *Bot) getPendingAuthCodes() int {
 // - role name 3
 func (bot *Bot) getWhitelistedRoles() string {
 	var list string
-	for _, roleID := range bot.config.Whitelist {
-		role, err := bot.client.State.Role(bot.config.Guild, roleID)
+	roles, err := bot.client.GuildRoles(bot.config.Guild)
 
-		if err == nil {
-			list += fmt.Sprintf(" * %s\n", role.Name)
+	if err != nil {
+		return "Failed to get roles"
+	}
+
+	for _, role := range roles {
+		for _, roleID := range bot.config.Whitelist {
+			if roleID == role.ID {
+				list += fmt.Sprintf(" * %s\n", role.Name)
+				break
+			}
 		}
 	}
+
+	if len(list) == 0 {
+		list = "No roles"
+	}
+
 	return list
 }
 
@@ -40,12 +52,24 @@ func (bot *Bot) getWhitelistedRoles() string {
 // - role name 3
 func (bot *Bot) getAdminRoles() string {
 	var list string
-	for _, roleID := range bot.config.AdminRoles {
-		role, err := bot.client.State.Role(bot.config.Guild, roleID)
+	roles, err := bot.client.GuildRoles(bot.config.Guild)
 
-		if err == nil {
-			list += fmt.Sprintf(" * %s\n", role.Name)
+	if err != nil {
+		return "Failed to get roles"
+	}
+
+	for _, role := range roles {
+		for _, roleID := range bot.config.AdminRoles {
+			if roleID == role.ID {
+				list += fmt.Sprintf(" * %s\n", role.Name)
+				break
+			}
 		}
 	}
+
+	if len(list) == 0 {
+		list = "No roles"
+	}
+
 	return list
 }
