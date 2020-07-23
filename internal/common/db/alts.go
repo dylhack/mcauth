@@ -62,8 +62,13 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 
 // Identifier can be player name or player ID.
 func (at *AltsTable) RemAlt(identifier string) error {
-	prep, _ := at.db.Prepare("DELETE FROM alts WHERE player_id=? OR player_name=?")
-	_, err := prep.Exec(identifier, identifier)
+	prep, err := at.db.Prepare("DELETE FROM alts WHERE player_id=? OR player_name=?")
+
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = prep.Exec(identifier, identifier)
 	defer prep.Close()
 
 	if err != nil {
@@ -111,6 +116,7 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
 	prep, err := at.db.Prepare(
 		"SELECT * FROM alts WHERE player_id=?",
 	)
+
 	if err != nil {
 		panic(err)
 	}
@@ -119,7 +125,7 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
 	rows, err := prep.Query(playerID)
 
 	if err != nil {
-		log.Printf("Failed to get alt \"%s\", because\n%s",
+		log.Printf("Failed to get alt \"%s\", because\n%s\n",
 			playerID, err.Error())
 		return AltAcc{}
 	}
@@ -130,12 +136,12 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc) {
 		if err != nil {
 			log.Printf("Failed to scan alt \"%s\", because\n%s",
 				playerID, err.Error())
-			continue
+			return result
+		} else {
+			at.fastStore(playerID, &result)
 		}
-		go at.fastStore(playerID, &result)
-		return result
 	}
-	return AltAcc{}
+	return result
 }
 
 // get all the current stored alt accounts of an owner.
