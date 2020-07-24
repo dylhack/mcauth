@@ -90,7 +90,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		util.Reply(
 			bot.client,
 			msg.Message,
-			fmt.Sprintf("%s is %s", user.Mention(), playerName),
+			fmt.Sprintf("%s is %s (%s)", user.Mention(), playerName, playerID),
 		)
 		return
 	}
@@ -122,7 +122,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	util.Reply(
 		bot.client,
 		msg.Message,
-		fmt.Sprintf("%s is <@%s> (%s)", playerName, userID, userID),
+		fmt.Sprintf("%s is <@%s> (%s/%s)", playerName, userID, playerID, userID),
 	)
 }
 
