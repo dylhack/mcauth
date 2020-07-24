@@ -53,20 +53,25 @@ func (bot *Bot) IsAdmin(member *dg.Member) bool {
 
 // The first boolean returned is whether they're whitelisted or not.
 // the second boolean returned is whether or not they're an administrator
-func (bot *Bot) CheckRoles(role []string) (bool, bool) {
+func (bot *Bot) CheckRoles(role []string) (isWhitelisted, isAdmin bool) {
+	isWhitelisted = false
+	isAdmin = false
 	for _, role := range role {
 		for _, adminRole := range bot.config.AdminRoles {
 			if adminRole == role {
-				return true, true
+				isWhitelisted = true
+				isAdmin = true
+				return isWhitelisted, isAdmin
 			}
 		}
 		for _, whitelisted := range bot.config.Whitelist {
 			if whitelisted == role {
-				return true, false
+				isWhitelisted = true
+				isAdmin = false
 			}
 		}
 	}
-	return false, false
+	return isWhitelisted, isAdmin
 }
 
 func (bot *Bot) AdminCheck(role []string) bool {
