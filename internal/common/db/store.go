@@ -7,15 +7,19 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
+	"time"
 )
 
 // Postgres configuration
 type Config struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	User     string `yaml:"username"`
-	Password string `yaml:"password"`
-	Database string `yaml:"database_name"`
+	Host               string        `yaml:"host"`
+	Port               int           `yaml:"port"`
+	User               string        `yaml:"username"`
+	Password           string        `yaml:"password"`
+	Database           string        `yaml:"database_name"`
+	MaxConnections     int           `yaml:"max_connections"`
+	MaxIdleConnections int           `yaml:"max_idle_connections"`
+	ConnLifespan       time.Duration `yaml:"conn_lifespan"`
 }
 
 type Store struct {
@@ -39,6 +43,10 @@ func GetStore(config Config) (c Store) {
 	if err = db.Ping(); err != nil {
 		log.Fatalln("Failed to ping the postgres database\n", err.Error())
 	}
+
+	c.db.SetMaxOpenConns(config.MaxConnections)
+	c.db.SetMaxIdleConns(config.MaxIdleConnections)
+	c.db.SetConnMaxLifetime(time.Hour * config.ConnLifespan)
 
 	c.db = db
 	// Alt account management table
