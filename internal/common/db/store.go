@@ -44,11 +44,12 @@ func GetStore(config Config) (c Store) {
 		log.Fatalln("Failed to ping the postgres database\n", err.Error())
 	}
 
+	c.db = db
+
 	c.db.SetMaxOpenConns(config.MaxConnections)
 	c.db.SetMaxIdleConns(config.MaxIdleConnections)
 	c.db.SetConnMaxLifetime(config.ConnLifespan)
 
-	c.db = db
 	// Alt account management table
 	c.Alts = GetAltsTable(db)
 	// Authentication code table
