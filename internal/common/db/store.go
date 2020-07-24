@@ -46,7 +46,7 @@ func GetStore(config Config) (c Store) {
 
 	c.db.SetMaxOpenConns(config.MaxConnections)
 	c.db.SetMaxIdleConns(config.MaxIdleConnections)
-	c.db.SetConnMaxLifetime(time.Hour * config.ConnLifespan)
+	c.db.SetConnMaxLifetime(config.ConnLifespan)
 
 	c.db = db
 	// Alt account management table
