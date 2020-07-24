@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"log"
 	"strings"
+	"time"
 )
 
 type Config struct {
@@ -36,11 +37,14 @@ func GetConfig(configPath string) (config Config) {
 	// default configuration, all the other attributes are blank
 	config = Config{
 		DB: db.Config{
-			Host:     "localhost",
-			Port:     5432,
-			User:     "postgres",
-			Password: "",
-			Database: "",
+			Host:               "localhost",
+			Port:               5432,
+			User:               "postgres",
+			Password:           "",
+			Database:           "",
+			MaxConnections:     50,
+			MaxIdleConnections: 50,
+			ConnLifespan:       time.Hour * 1,
 		},
 		Discord: DiscordConfig{
 			Prefix:     ".mc",
