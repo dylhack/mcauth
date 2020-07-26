@@ -12,6 +12,7 @@ codes which allows players to link their accounts with ease.
    * [Paper MC](https://papermc.io/)
  * [The MCAuth Client Minecraft Plugin](https://github.com/dhghf/mcauth-client)
 
+
 ## Setup
 
 ### 1. Build
@@ -22,7 +23,7 @@ $ go build
 ```
 
 ### 2. Configure
-An executable file will be created in the directory, run it once and it will generate a default
+An executable file will be created in the directory, run it once, and it will generate a default
 config file. Fill out the config file, here is a reference:
 ```yaml
 database:                      # Postgres Database Configuration
