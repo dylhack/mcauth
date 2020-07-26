@@ -2,9 +2,9 @@ package authcodes
 
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
+	db2 "github.com/dhghf/mcauth/test/common/db"
 	"os"
 	"testing"
-	"time"
 )
 
 var playerUUID = "5bce3068e4f3489fb66b5723b2a7cdb1"
@@ -12,18 +12,8 @@ var authCode string
 var store *db.AuthTable
 
 func TestMain(m *testing.M) {
-	dbConfig := db.Config{
-		Host:               "localhost",
-		Port:               5432,
-		User:               "",
-		Password:           "",
-		Database:           "mcauth",
-		MaxConnections:     50,
-		MaxIdleConnections: 50,
-		ConnLifespan:       1 * time.Hour,
-	}
 	if store == nil {
-		storeDB := db.GetStore(dbConfig)
+		storeDB := db.GetStore(db2.TestConfig)
 		store = &storeDB.Auth
 	}
 	m.Run()

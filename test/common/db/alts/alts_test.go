@@ -2,9 +2,9 @@ package alts
 
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
+	db2 "github.com/dhghf/mcauth/test/common/db"
 	"os"
 	"testing"
-	"time"
 )
 
 var (
@@ -15,18 +15,8 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	dbConfig := db.Config{
-		Host:               "",
-		Port:               5432,
-		User:               "",
-		Password:           "",
-		Database:           "",
-		MaxConnections:     50,
-		MaxIdleConnections: 50,
-		ConnLifespan:       1 * time.Hour,
-	}
 	if store == nil {
-		storeDB := db.GetStore(dbConfig)
+		storeDB := db.GetStore(db2.TestConfig)
 		store = &storeDB.Alts
 	}
 	m.Run()

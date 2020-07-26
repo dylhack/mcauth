@@ -2,6 +2,7 @@ package links
 
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
+	db2 "github.com/dhghf/mcauth/test/common/db"
 	"os"
 	"testing"
 )
@@ -14,7 +15,7 @@ var (
 
 func TestMain(m *testing.M) {
 	if store == nil {
-		storeDB := db.GetStore("./mcauth-test.db")
+		storeDB := db.GetStore(db2.TestConfig)
 		store = &storeDB.Links
 	}
 	m.Run()
