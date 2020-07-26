@@ -4,6 +4,7 @@ import (
 	"github.com/dhghf/mcauth/internal/common/db"
 	"os"
 	"testing"
+	"time"
 )
 
 var (
@@ -14,8 +15,18 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	dbConfig := db.Config{
+		Host:               "",
+		Port:               5432,
+		User:               "",
+		Password:           "",
+		Database:           "",
+		MaxConnections:     50,
+		MaxIdleConnections: 50,
+		ConnLifespan:       1 * time.Hour,
+	}
 	if store == nil {
-		storeDB := db.GetStore("./mcauth-test.db")
+		storeDB := db.GetStore(dbConfig)
 		store = &storeDB.Alts
 	}
 	m.Run()
@@ -37,12 +48,16 @@ func testAddAlt(t *testing.T) {
 	err := store.AddAlt(owner, playerID, playerName)
 
 	if err != nil {
-		t.Error(err)
+		t.Error("AddAlt didn't add the alt account", err)
 	}
 }
 
 func testGetAlt(t *testing.T) {
-	alt := store.GetAlt(playerID)
+	alt, err := store.GetAlt(playerID)
+
+	if err != nil {
+		t.Error("GetAlt failed to get the alt because, ", err)
+	}
 
 	if alt.PlayerID != playerID {
 		t.Errorf("GetAlt failed because of player ID mismatch \"%s\" != \"%s\"\n", playerID, alt.PlayerID)
@@ -58,7 +73,11 @@ func testGetAlt(t *testing.T) {
 }
 
 func testGetAllAlts(t *testing.T) {
-	alts := store.GetAllAlts()
+	alts, err := store.GetAllAlts()
+
+	if err != nil {
+		t.Error("GetAllAlts failed because, ", err)
+	}
 
 	if len(alts) == 0 {
 		t.Error("GetAllAlts returned nothing")
@@ -77,16 +96,13 @@ func testGetAllAlts(t *testing.T) {
 }
 
 func testRemAltPlayerName(t *testing.T) {
-	err := store.RemAlt(playerName)
-
-	if err != nil {
-		t.Error(err)
+	if err := store.RemAlt(playerName); err != nil {
+		t.Error("RemAlt by player name failed because, ", err)
 	}
 }
-func testRemAltPlayerID(t *testing.T) {
-	err := store.RemAlt(playerID)
 
-	if err != nil {
-		t.Error(err)
+func testRemAltPlayerID(t *testing.T) {
+	if err := store.RemAlt(playerID); err != nil {
+		t.Error("RemAlt by player UUID failed because, ", err)
 	}
 }
