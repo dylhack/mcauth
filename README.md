@@ -3,6 +3,7 @@ For linking your Minecraft and Discord account together. MCAuth is for Minecraft
 to allow the right players in their Discord to play on their server. MCAuth uses authentication
 codes which allows players to link their accounts with ease.
 
+MCAuth is under the GNU General Public License 3 license [GPLv3](./LICENSE)
 
 ## Requirements
  * [PostgreSQL](https://www.postgresql.org/)
