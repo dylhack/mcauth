@@ -59,7 +59,7 @@ func GetStore(config Config) (c Store) {
 	// Alt account management table
 	c.Alts = GetAltsTable(gDB)
 	// Authentication code table
-	c.Auth = GetAuthTable(db)
+	c.Auth = GetAuthTable(gDB)
 	// Linked accounts table
 	c.Links = GetLinksTable(db)
 
