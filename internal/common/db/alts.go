@@ -18,12 +18,12 @@ type AltsTable struct {
 
 type AltAcc struct {
 	// The person who claimed the alt
-	Owner string `json:"alt_owner" gorm:"type:text;unique;not null"`
+	Owner string `json:"alt_owner" gorm:"column:owner;type:text;unique;not null"`
 	// The ID of the alt account (this will be used for verifying)
-	PlayerID string `json:"alt_id" gorm:"type:text;primary_key;not null"`
+	PlayerID string `json:"alt_id" gorm:"column:player_id;type:text;primary_key;not null"`
 	// The name of the alt, this doesn't need to be consistent since it's mostly for listing without
 	// reaching out to Mojang's API
-	PlayerName string `json:"alt_name" gorm:"type:text;unique;not null"`
+	PlayerName string `json:"alt_name" gorm:"column:player_name;type:text;unique;not null"`
 }
 
 // This will initialize the table if it doesn't exist. It will then return AltsTable where other
