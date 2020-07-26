@@ -61,7 +61,7 @@ func GetStore(config Config) (c Store) {
 	// Authentication code table
 	c.Auth = GetAuthTable(gDB)
 	// Linked accounts table
-	c.Links = GetLinksTable(db)
+	c.Links = GetLinksTable(gDB)
 
 	return c
 }

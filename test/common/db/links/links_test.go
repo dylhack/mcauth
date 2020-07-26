@@ -3,7 +3,6 @@ package links
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
 	db2 "github.com/dhghf/mcauth/test/common/db"
-	"os"
 	"testing"
 )
 
@@ -32,7 +31,6 @@ func TestLinks(t *testing.T) {
 		t.Run("Re-link", testNewLink)
 		t.Run("UnLinkDiscordID", testUnLinkDiscordID)
 	})
-	t.Cleanup(func() { os.Remove("./mcauth-test.db") })
 }
 
 func testNewLink(t *testing.T) {
@@ -52,7 +50,11 @@ func testSetLink(t *testing.T) {
 }
 
 func testGetPlayerUUID(t *testing.T) {
-	result := store.GetPlayerID(discordID)
+	result, err := store.GetPlayerID(discordID)
+
+	if err != nil {
+		t.Error("GetPlayerID failed because, ", err)
+	}
 
 	if playerUUID != result {
 		t.Errorf("GetPlayerID failed because \"%s\" != \"%s\"\n", playerUUID, result)
@@ -60,7 +62,11 @@ func testGetPlayerUUID(t *testing.T) {
 }
 
 func testGetDiscordID(t *testing.T) {
-	result := store.GetDiscordID(playerUUID)
+	result, err := store.GetDiscordID(playerUUID)
+
+	if err != nil {
+		t.Error("GetDiscordID failed because, ", err)
+	}
 
 	if discordID != result {
 		t.Errorf("GetDiscordID failed because \"%s\" != \"%s\"\n", discordID, result)
@@ -68,7 +74,11 @@ func testGetDiscordID(t *testing.T) {
 }
 
 func testGetAllLinks(t *testing.T) {
-	result := store.GetAllLinks()
+	result, err := store.GetAllLinks()
+
+	if err != nil {
+		t.Error("GetAllLinks failed because, ", err)
+	}
 
 	if len(result) == 0 {
 		t.Error("GetAllLinks returned nothing")
