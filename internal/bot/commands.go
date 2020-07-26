@@ -179,13 +179,8 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 // See the status of the bot
 func (bot *Bot) cmdStatus(msg *dg.Message) {
 	embed := &dg.MessageEmbed{
-		Title: "MCAuth Status",
+		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
 		URL:   "https://github.com/dhghf/mcauth",
-		Author: &dg.MessageEmbedAuthor{
-			URL:     "https://github.com/dhghf",
-			Name:    "dhghf",
-			IconURL: "https://avatars3.githubusercontent.com/u/27179786?s=400&u=f407d9552a9ada044d23d8235d3f183efd9082a0&v=4",
-		},
 		Color: 0xfc4646,
 	}
 

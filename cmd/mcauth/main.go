@@ -8,10 +8,8 @@ import (
 	"log"
 )
 
-const version = "2.0.0"
-
 func main() {
-	log.Printf("Starting MCAuth [%s]\n", version)
+	log.Printf("Starting MCAuth [%s]\n", common.Version)
 	config := common.GetConfig("./config.yml")
 	store := db.GetStore(config.DB)
 
