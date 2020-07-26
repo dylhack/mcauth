@@ -132,5 +132,11 @@ Longest transaction:         0.21
 Shortest transaction:        0.00
 ```
 
+### Versioning
+`x.y.z`
+ - `x` A major change, the plugin needs to update
+ - `y` A minor change, an important server-only change was made
+ - `z` A patch, an insignificant change
+
 ### Further Dev Information
 See [Endpoints.md](./docs/Endpoints.md)
