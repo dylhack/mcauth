@@ -5,9 +5,11 @@ codes which allows players to linek their accounts with ease.
 
 
 ## Requirements
- * Postgres
- * Go 1.14
- * Spigot (or Paper) Minecraft Server
+ * [PostgreSQL](https://www.postgresql.org/)
+ * [Go 1.14](https://golang.org/)
+ * [Spigot Minecraft Server](https://www.spigotmc.org/)
+   * **Working Alternatives**
+   * [Paper MC](https://papermc.io/)
  * [The MCAuth Client Minecraft Plugin](https://github.com/dhghf/mcauth-client)
 
 ## Setup
