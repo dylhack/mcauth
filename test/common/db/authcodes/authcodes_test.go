@@ -3,7 +3,6 @@ package authcodes
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
 	db2 "github.com/dhghf/mcauth/test/common/db"
-	"os"
 	"testing"
 )
 
@@ -24,7 +23,6 @@ func TestAuthCodes(t *testing.T) {
 	t.Run("GetAuthCode", testGetAuthCode)
 	t.Run("GetPlayerID", testGetPlayerID)
 	t.Run("Authorize", testAuthorize)
-	t.Cleanup(func() { os.Remove("./mcauth-test.db") })
 }
 
 func testNewAuthCode(t *testing.T) {

@@ -3,7 +3,6 @@ package alts
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
 	db2 "github.com/dhghf/mcauth/test/common/db"
-	"os"
 	"testing"
 )
 
@@ -31,7 +30,6 @@ func TestAlts(t *testing.T) {
 		t.Run("Add alt again", testAddAlt)
 		t.Run("RemAlt by Player Name", testRemAltPlayerName)
 	})
-	t.Cleanup(func() { os.Remove("./mcauth-test.db") })
 }
 
 func testAddAlt(t *testing.T) {
