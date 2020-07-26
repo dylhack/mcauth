@@ -2,14 +2,15 @@ package common
 
 import (
 	util "github.com/Floor-Gang/utilpkg/config"
+	"github.com/dhghf/mcauth/internal/common/db"
 	"github.com/google/uuid"
 	"log"
-	"os"
 	"strings"
+	"time"
 )
 
 type Config struct {
-	DB        DBConfig        `yaml:"database"`
+	DB        db.Config       `yaml:"database"`
 	Discord   DiscordConfig   `yaml:"discord_bot"`
 	WebServer WebServerConfig `yaml:"webserver"`
 }
@@ -27,26 +28,23 @@ type DiscordConfig struct {
 	AdminRoles []string `yaml:"admin_roles"`
 }
 
-type DBConfig struct {
-	Location string `yaml:"location"`
-}
-
 type WebServerConfig struct {
 	Port  int    `yaml:"port"`
 	Token string `yaml:"token"`
 }
 
 func GetConfig(configPath string) (config Config) {
-	cwd, err := os.Getwd()
-
-	if err != nil {
-		log.Fatalln("Failed to get current working directory?\n" + err.Error())
-	}
-
 	// default configuration, all the other attributes are blank
 	config = Config{
-		DB: DBConfig{
-			Location: cwd + "/mcauth.db",
+		DB: db.Config{
+			Host:               "localhost",
+			Port:               5432,
+			User:               "postgres",
+			Password:           "",
+			Database:           "",
+			MaxConnections:     50,
+			MaxIdleConnections: 50,
+			ConnLifespan:       time.Hour * 1,
 		},
 		Discord: DiscordConfig{
 			Prefix:     ".mc",
@@ -59,7 +57,7 @@ func GetConfig(configPath string) (config Config) {
 		},
 	}
 
-	err = util.GetConfig(configPath, &config)
+	err := util.GetConfig(configPath, &config)
 
 	if err != nil {
 		log.Fatalln(err)

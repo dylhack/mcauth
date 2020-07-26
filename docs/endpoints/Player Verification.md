@@ -1,3 +1,9 @@
+# Player Verification
+This is where the magic happens. In the database Minecraft player UUID's (without hyphens) and
+Discord user ID's (twitter snowflakes) are stored together on the same row. This is called a 
+linked account. This one endpoint allows external clients to verify a given Minecraft player based
+on their Minecraft UUID (without hyphens).
+
 ## POST /verify/{Player UUID}
 Possible Errors:
  * [Missing Player UUID Attribute](#Missing-Player-UUID-Attribute)
@@ -12,9 +18,8 @@ Required Headers:
 |-------------|--------|-------------------------|
 | Player UUID | string | The Minecraft player ID |
 
-The `player UUID` is the Minecraft player UUID stripped of all the dashes. The
-server will provide the following response if everything went alright, 
-otherwise an error may occur.
+The `player UUID` is the Minecraft player UUID stripped of all the dashes. The server will provide
+the following response if everything went alright, otherwise an error may occur.
 
 
 ### Response Body
@@ -49,14 +54,12 @@ This means they can play on the Minecraft server.
 |-----------|---------|--------------------------------------------------|
 | verified  | boolean | Whether or not the given player is ready to play |
 
-The valid attribute is a boolean which represents whether the player can
-play on the Minecraft server. This will always return a boolean whether or
-not there was an issue getting the member associated with the provided
-player ID.
+The valid attribute is a boolean which represents whether the player can play on the Minecraft 
+server. This will always return a boolean whether or not there was an issue getting the member
+associated with the provided player ID.
 
-An added "reason" attribute also exists. It will only be 'no_link' which
-means the Minecraft player isn't linked with a Discord account and 'no_role'
-which means they're not whitelisted 
+An added "reason" attribute also exists. It will only be 'no_link' which means the Minecraft player
+isn't linked with a Discord account and 'no_role' which means they're not whitelisted 
 
 An operator of the Minecraft server can enforce validation of a player as
 well using the [alts endpoint](./Alt%20Accounts.md).

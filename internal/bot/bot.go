@@ -5,12 +5,14 @@ import (
 	c "github.com/dhghf/mcauth/internal/common"
 	"github.com/dhghf/mcauth/internal/common/db"
 	"log"
+	"strings"
 )
 
 type Bot struct {
 	client *dg.Session
 	store  *db.Store
 	config *c.DiscordConfig
+	sync   SyncHandler
 	// maintenance mode
 	locked bool
 }
@@ -27,9 +29,11 @@ func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 		store:  store,
 		config: config,
 		locked: false,
+		sync:   GetSyncHandler(),
 	}
 
 	client.AddHandler(bot.OnMessage)
+	client.AddHandler(bot.OnGuildMemberUpdate)
 	client.AddHandlerOnce(bot.OnReady)
 
 	log.Println("Starting to Discord bot...")
@@ -72,6 +76,24 @@ func (bot *Bot) CheckRoles(role []string) (isWhitelisted, isAdmin bool) {
 		}
 	}
 	return isWhitelisted, isAdmin
+}
+
+func (bot *Bot) Sync(memberID string) {
+	log.Printf("Syncing roles for \"%s\"\n", memberID)
+	member, err := bot.client.GuildMember(bot.config.Guild, memberID)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Unknown Member") {
+			bot.sync.SyncRoles(memberID, &[]string{})
+		} else {
+			log.Fatalf(
+				"Failed to fetch member \"%s\", please investigate \n%s",
+				memberID, err,
+			)
+		}
+	} else {
+		bot.sync.SyncRoles(memberID, &member.Roles)
+	}
 }
 
 func (bot *Bot) AdminCheck(role []string) bool {

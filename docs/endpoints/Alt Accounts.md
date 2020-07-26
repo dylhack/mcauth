@@ -1,6 +1,9 @@
 # Alt Account Management
-These endpoints are for enforcing the authenticator to allow players to join
-. In particular administrator alt accounts.
+he Minecraft server administrators can use alt account management to claim Minecraft players
+as their alts. This will allow those players to join without authentication. This is super
+useful for mostly alts, but also any player you want to join without question. It will still
+check to see if the owner of the alt is authenticated which can only be done by administrators
+of the server.
 
 ## GET /alts/{owner}
 Possible Errors:

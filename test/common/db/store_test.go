@@ -6,5 +6,5 @@ import (
 )
 
 func TestGetStore(t *testing.T) {
-	db.GetStore("./mcauth-test.db")
+	db.GetStore(TestConfig)
 }

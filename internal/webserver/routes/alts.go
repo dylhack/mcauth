@@ -44,7 +44,7 @@ func (server *Server) getAltsOf(res http.ResponseWriter, req *http.Request) {
 
 func (server *Server) getAllAlts(res http.ResponseWriter, _ *http.Request) {
 	store := server.Store.Alts
-	alts := store.GetAllAlts()
+	alts, _ := store.GetAllAlts()
 	response := c.AllAltsResponse{Accounts: alts}
 
 	Ship(res, response)

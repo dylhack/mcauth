@@ -7,7 +7,7 @@ import (
 
 // if reason is empty and isValid is true then ignore reason
 func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
-	alt := bot.store.Alts.GetAlt(playerID)
+	alt, _ := bot.store.Alts.GetAlt(playerID)
 
 	// check if they're an alt account
 	if len(alt.Owner) > 0 {
@@ -16,7 +16,7 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 			alt.PlayerName, alt.PlayerID,
 			alt.Owner,
 		)
-		userID := bot.store.Links.GetDiscordID(alt.Owner)
+		userID, _ := bot.store.Links.GetDiscordID(alt.Owner)
 
 		if len(userID) == 0 {
 			return false, c.NoLink
@@ -25,7 +25,7 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 		return bot.VerifyDiscordUser(userID)
 	}
 
-	userID := bot.store.Links.GetDiscordID(playerID)
+	userID, _ := bot.store.Links.GetDiscordID(playerID)
 
 	if len(userID) == 0 {
 		return false, c.NoLink
@@ -35,18 +35,15 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 }
 
 func (bot *Bot) VerifyDiscordUser(userID string) (bool, string) {
-	member, err := bot.client.GuildMember(
-		bot.config.Guild,
-		userID,
-	)
+	roles, isOK := bot.sync.GetRoles(userID)
 
-	if err != nil {
-		log.Printf("Failed to fetch \"%s\", because\n%s\n", userID, err.Error())
-		return false, c.NoLink
+	if !isOK {
+		bot.Sync(userID)
+		roles, _ = bot.sync.GetRoles(userID)
 	}
 
 	// check whether they have an administrator roles. they pass any exceptions.
-	isWhitelisted, hasAdmin := bot.CheckRoles(member.Roles)
+	isWhitelisted, hasAdmin := bot.CheckRoles(*roles)
 
 	// if they're an admin then they pass all exceptions
 	if hasAdmin {

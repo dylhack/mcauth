@@ -9,7 +9,7 @@ import (
 
 func main() {
 	config := common.GetConfig("./config.yml")
-	store := db.GetStore(config.DB.Location)
+	store := db.GetStore(config.DB)
 
 	discordBot := bot.StartBot(&config.Discord, &store)
 	webserver.StartServer(&config.WebServer, discordBot, &store)
