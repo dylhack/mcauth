@@ -87,12 +87,15 @@ new one.
 Last tested `July 26th, 2020`
 
 __Notes__
+A "sync" is when the Discord bot fetchs a player's roles on Discord. It will keep up-to-date on the
+player's roles so it will never have to fetch the roles again in the future.
  * This is only using the same 50 player UUID's
  * The first post is the initial sync of those 50 players
  * The second post is the same 50 players after the initial sync
  * 50 concurrent transactions, 60 seconds
  * This is using GORM + Postgres
-***Before** Initial Sync*
+
+***Before** Initial Role Sync*
 ```
 ** SIEGE 4.0.4
 Transactions:                277572 hits
@@ -109,7 +112,7 @@ Longest transaction:         27.25
 Shortest transaction:        0.00
 ```
 
-***After** Initial Sync*
+***After** Initial Role Sync*
 ```
 ** SIEGE 4.0.4
 Transactions:                391772 hits
