@@ -91,6 +91,7 @@ new one.
 Last tested `July 26th, 2020`
 
 __Notes__
+
 A "sync" is when the Discord bot fetchs a player's roles on Discord. It will keep up-to-date on the
 player's roles so it will never have to fetch the roles again in the future.
  * This is only using the same 50 player UUID's
