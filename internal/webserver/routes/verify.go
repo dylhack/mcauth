@@ -50,7 +50,7 @@ func (server *Server) verifyPlayer(res http.ResponseWriter, req *http.Request) {
 
 func (server *Server) newAuthCode(res http.ResponseWriter, playerID string) {
 	store := server.Store.Auth
-	authCode := store.NewAuthCode(playerID)
+	authCode, _ := store.NewAuthCode(playerID)
 
 	response := common.InvalidPlayerAuth{
 		Reason:   common.AuthCode,

@@ -29,7 +29,7 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 	}
 
 	// check if they're not already linked with an account
-	if account := bot.store.Links.GetPlayerID(msg.Author.ID); len(account) > 0 {
+	if account, _ := bot.store.Links.GetPlayerID(msg.Author.ID); len(account) > 0 {
 		util.Reply(bot.client, msg.Message, "You're already linked with an account.")
 		return
 	}
@@ -49,7 +49,7 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 }
 
 func (bot *Bot) cmdWhoAmI(msg *dg.MessageCreate) {
-	playerID := bot.store.Links.GetPlayerID(msg.Author.ID)
+	playerID, _ := bot.store.Links.GetPlayerID(msg.Author.ID)
 
 	if len(playerID) == 0 {
 		util.Reply(bot.client, msg.Message, "You aren't linked with any Minecraft accounts.")
@@ -70,7 +70,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	// first let's see if they mentioned a user
 	if len(msg.Mentions) > 0 {
 		user := msg.Mentions[0]
-		playerID = bot.store.Links.GetPlayerID(user.ID)
+		playerID, _ = bot.store.Links.GetPlayerID(user.ID)
 
 		if len(playerID) == 0 {
 			util.Reply(bot.client, msg.Message, "I don't know that user.")
@@ -113,7 +113,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		return
 	}
 
-	userID := bot.store.Links.GetDiscordID(playerID)
+	userID, _ := bot.store.Links.GetDiscordID(playerID)
 	if len(userID) == 0 {
 		util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
 		return
