@@ -36,7 +36,7 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 
 	authCode := args[2]
 	if playerID, isOK := bot.store.Auth.Authorize(authCode); isOK {
-		err := bot.store.Links.SetLink(msg.Author.ID, playerID)
+		err := bot.store.Links.NewLink(msg.Author.ID, playerID)
 		if err == nil {
 			util.Reply(bot.client, msg.Message, "Linked.")
 		} else {

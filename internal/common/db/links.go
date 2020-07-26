@@ -9,8 +9,7 @@ import (
 )
 
 type LinksTable struct {
-	table string
-	gDB   *gorm.DB
+	gDB *gorm.DB
 }
 
 // This represents a linked account for a user
@@ -21,15 +20,15 @@ type LinkedAcc struct {
 	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
 }
 
+func (la *LinkedAcc) TableName() string {
+	return "account_links"
+}
+
 // This will create teh account_links table if it doesn't exist.
 // it will return LinksTable which can be used to interface with
 // the table.
 func GetLinksTable(gDB *gorm.DB) LinksTable {
-	var table = "account_links"
-
-	if !gDB.HasTable(table) {
-		gDB.Table(table).CreateTable(LinkedAcc{})
-	}
+	gDB.AutoMigrate(&LinkedAcc{})
 
 	return LinksTable{
 		gDB: gDB,
@@ -38,7 +37,7 @@ func GetLinksTable(gDB *gorm.DB) LinksTable {
 
 // This will get all the linked accounts in the table.
 func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc, err error) {
-	err = lt.gDB.Table(lt.table).
+	err = lt.gDB.
 		Find(&linkedList).
 		Error
 
@@ -52,7 +51,7 @@ func (lt *LinksTable) SetLink(discordID, playerID string) error {
 		PlayerID:  playerID,
 	}
 
-	return lt.gDB.Table(lt.table).
+	return lt.gDB.
 		Model(&linked).
 		Where("discord_id = ? OR player_id = ?", discordID, playerID).
 		Update(discordID, playerID).
@@ -66,7 +65,7 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 		PlayerID:  playerID,
 	}
 
-	return lt.gDB.Table(lt.table).
+	return lt.gDB.
 		Create(&linked).
 		Error
 }
@@ -75,7 +74,7 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 // The identifier can be either their Discord user ID or
 // Minecraft player UUID (without hyphens).
 func (lt *LinksTable) UnLink(identifier string) error {
-	return lt.gDB.Table(lt.table).
+	return lt.gDB.
 		Where("player_id = $1 OR discord_id = $1", identifier).
 		Delete(&LinkedAcc{}).
 		Error
@@ -86,7 +85,7 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string, err error)
 	linked := LinkedAcc{
 		PlayerID: "",
 	}
-	err = lt.gDB.Table(lt.table).
+	err = lt.gDB.
 		First(&linked, "discord_id = ?", discordID).
 		Error
 
@@ -99,7 +98,7 @@ func (lt *LinksTable) GetDiscordID(playerID string) (discordID string, err error
 		DiscordID: "",
 	}
 
-	err = lt.gDB.Table(lt.table).
+	err = lt.gDB.
 		First(&linked, "player_id = ?", playerID).
 		Error
 

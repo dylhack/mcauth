@@ -12,8 +12,7 @@ import (
 
 // This struct has methods for managing the "alt" table.
 type AltsTable struct {
-	gDB   *gorm.DB
-	table string
+	gDB *gorm.DB
 }
 
 type AltAcc struct {
@@ -26,17 +25,17 @@ type AltAcc struct {
 	PlayerName string `json:"alt_name" gorm:"column:player_name;type:text;unique;not null"`
 }
 
+func (aa *AltAcc) TableName() string {
+	return "alt_accounts"
+}
+
 // This will initialize the table if it doesn't exist. It will then return AltsTable where other
 // functions can access this database table.
 func GetAltsTable(gDB *gorm.DB) AltsTable {
-	table := "alts"
-	if !gDB.HasTable(table) {
-		gDB.Table(table).CreateTable(&AltAcc{})
-	}
+	gDB.AutoMigrate(&AltAcc{})
 
 	return AltsTable{
-		gDB:   gDB,
-		table: table,
+		gDB: gDB,
 	}
 }
 
@@ -48,7 +47,7 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 		PlayerName: playerName,
 	}
 
-	return at.gDB.Table(at.table).
+	return at.gDB.
 		Create(&altAcc).
 		Error
 }
@@ -56,7 +55,7 @@ func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) er
 // RemAlt removes an alt account from the table
 // identifier can be player name or player ID.
 func (at *AltsTable) RemAlt(identifier string) error {
-	return at.gDB.Table(at.table).
+	return at.gDB.
 		Where("player_name = ? OR player_id = ?", identifier, identifier).
 		Delete(AltAcc{}).
 		Error
@@ -64,7 +63,7 @@ func (at *AltsTable) RemAlt(identifier string) error {
 
 // This will get all the alt accounts in the database.
 func (at *AltsTable) GetAllAlts() (result []AltAcc, err error) {
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Find(&result).
 		Error
 	return result, err
@@ -73,7 +72,7 @@ func (at *AltsTable) GetAllAlts() (result []AltAcc, err error) {
 // GetAlt is used by bot/verify.go, it can get an alt account based on a playerID
 // but if the alt doesn't exist all the attributes of AltAcc will be empty.
 func (at *AltsTable) GetAlt(playerID string) (result AltAcc, err error) {
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		First(&result, "player_id = ?", playerID).
 		Error
 	return result, err
@@ -81,7 +80,7 @@ func (at *AltsTable) GetAlt(playerID string) (result AltAcc, err error) {
 
 // GetAltsOf will get all the alts associated with an owner (the person who claimed the alts).
 func (at *AltsTable) GetAltsOf(owner string) (result []AltAcc, err error) {
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Where("owner = ?", owner).Find(&result).
 		Error
 	return result, err

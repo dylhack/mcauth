@@ -11,9 +11,8 @@ import (
 )
 
 type AuthTable struct {
-	db    *sql.DB
-	gDB   *gorm.DB
-	table string
+	db  *sql.DB
+	gDB *gorm.DB
 }
 
 type AuthCode struct {
@@ -23,24 +22,23 @@ type AuthCode struct {
 	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
 }
 
+func (ac *AuthCode) TableName() string {
+	return "auth_codes"
+}
+
 // This will setup the table if it doesn't exist
 func GetAuthTable(gDB *gorm.DB) AuthTable {
-	table := "auth_codes"
-
-	if !gDB.HasTable(table) {
-		gDB.Table(table).CreateTable(&AuthCode{})
-	}
+	gDB.AutoMigrate(&LinkedAcc{})
 
 	return AuthTable{
-		db:    gDB.DB(),
-		gDB:   gDB,
-		table: table,
+		db:  gDB.DB(),
+		gDB: gDB,
 	}
 }
 
 // This will get all the pending authentication codes in the table.
 func (at *AuthTable) GetAllAuthCodes() (authCodes []AuthCode, err error) {
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Find(&authCodes).
 		Error
 	return authCodes, err
@@ -58,13 +56,10 @@ func (at *AuthTable) NewAuthCode(playerID string) (authCode string, err error) {
 
 	newUUID := uuid.New()
 	authCode = strings.Split(newUUID.String(), "-")[0]
-	err = at.gDB.
-		Table(at.table).
-		Create(&AuthCode{
-			AuthCode: authCode,
-			PlayerID: playerID,
-		}).
-		Error
+	err = at.gDB.Create(&AuthCode{
+		AuthCode: authCode,
+		PlayerID: playerID,
+	}).Error
 
 	if err != nil {
 		return "", err
@@ -80,7 +75,7 @@ func (at *AuthTable) GetAuthCode(playerID string) (authCode string, err error) {
 		AuthCode: "",
 	}
 
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Find(&result, "player_id = ?", playerID).
 		Error
 
@@ -111,7 +106,7 @@ func (at *AuthTable) GetPlayerID(authCode string) (playerID string, err error) {
 		PlayerID: "",
 	}
 
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Find(&result, "auth_code = ?", authCode).
 		Error
 
@@ -121,7 +116,7 @@ func (at *AuthTable) GetPlayerID(authCode string) (playerID string, err error) {
 // This will remove an authentication code given. The bool returned represents
 // if the authentication code removed was removed.
 func (at *AuthTable) RemoveCode(authCode string) (err error) {
-	err = at.gDB.Table(at.table).
+	err = at.gDB.
 		Where("auth_code = ? ", authCode).
 		Delete(AuthCode{}).
 		Error
