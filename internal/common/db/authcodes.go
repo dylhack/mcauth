@@ -28,7 +28,7 @@ func (ac *AuthCode) TableName() string {
 
 // This will setup the table if it doesn't exist
 func GetAuthTable(gDB *gorm.DB) AuthTable {
-	gDB.AutoMigrate(&LinkedAcc{})
+	gDB.AutoMigrate(&AuthCode{})
 
 	return AuthTable{
 		db:  gDB.DB(),
