@@ -35,18 +35,15 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 }
 
 func (bot *Bot) VerifyDiscordUser(userID string) (bool, string) {
-	member, err := bot.client.GuildMember(
-		bot.config.Guild,
-		userID,
-	)
+	roles, isOK := bot.sync.GetRoles(userID)
 
-	if err != nil {
-		log.Printf("Failed to fetch \"%s\", because\n%s\n", userID, err.Error())
-		return false, c.NoLink
+	if !isOK {
+		bot.Sync(userID)
+		roles, _ = bot.sync.GetRoles(userID)
 	}
 
 	// check whether they have an administrator roles. they pass any exceptions.
-	isWhitelisted, hasAdmin := bot.CheckRoles(member.Roles)
+	isWhitelisted, hasAdmin := bot.CheckRoles(*roles)
 
 	// if they're an admin then they pass all exceptions
 	if hasAdmin {

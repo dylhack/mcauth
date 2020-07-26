@@ -114,3 +114,15 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		)
 	}
 }
+
+func (bot *Bot) OnGuildMemberUpdate(_ *dg.Session, event *dg.GuildMemberUpdate) {
+	bot.Sync(event.User.ID)
+}
+
+func (bot *Bot) onGuildMemberAdd(_ *dg.Session, event *dg.GuildMemberAdd) {
+	bot.Sync(event.User.ID)
+}
+
+func (bot *Bot) onGuildMemberRemove(_ *dg.Session, event *dg.GuildMemberRemove) {
+	bot.Sync(event.User.ID)
+}
