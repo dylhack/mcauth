@@ -1,10 +1,17 @@
 package bot
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 func (bot *Bot) countAltAccounts() int {
-	alts := bot.store.Alts.GetAllAlts()
+	alts, err := bot.store.Alts.GetAllAlts()
 
+	if err != nil {
+		log.Println("Failed to get all alt accounts for status because, ", err)
+		return 0
+	}
 	return len(alts)
 }
 
@@ -13,13 +20,23 @@ func (bot *Bot) countPlayersOnline() int {
 }
 
 func (bot *Bot) countLinkedAccounts() int {
-	linked := bot.store.Links.GetAllLinks()
+	linked, err := bot.store.Links.GetAllLinks()
+
+	if err != nil {
+		log.Println("Failed to get all linked accounts for status because, ", err)
+		return 0
+	}
 
 	return len(linked)
 }
 
 func (bot *Bot) countPendingAuthCodes() int {
-	authCodes := bot.store.Auth.GetAllAuthCodes()
+	authCodes, err := bot.store.Auth.GetAllAuthCodes()
+
+	if err != nil {
+		log.Println("Failed to get all pending auth codes for status because, ", err)
+		return 0
+	}
 
 	return len(authCodes)
 }

@@ -5,7 +5,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"time"
 )
@@ -24,6 +25,7 @@ type Config struct {
 
 type Store struct {
 	db    *sql.DB
+	gDB   *gorm.DB
 	Alts  AltsTable
 	Auth  AuthTable
 	Links LinksTable
@@ -34,28 +36,32 @@ func GetStore(config Config) (c Store) {
 		"user=%s password=%s host=%s database=%s port=%d sslmode=disable",
 		config.User, config.Password, config.Host, config.Database, config.Port,
 	)
-	db, err := sql.Open("postgres", connConfig)
+	gDB, err := gorm.Open("postgres", connConfig)
 
 	if err != nil {
 		log.Fatalln("Failed to connect to the postgres database\n", err.Error())
 	}
+	db := gDB.DB()
 
 	if err = db.Ping(); err != nil {
 		log.Fatalln("Failed to ping the postgres database\n", err.Error())
 	}
 
-	c.db = db
+	c = Store{
+		db:  db,
+		gDB: gDB,
+	}
 
 	c.db.SetMaxOpenConns(config.MaxConnections)
 	c.db.SetMaxIdleConns(config.MaxIdleConnections)
 	c.db.SetConnMaxLifetime(config.ConnLifespan)
 
 	// Alt account management table
-	c.Alts = GetAltsTable(db)
+	c.Alts = GetAltsTable(gDB)
 	// Authentication code table
-	c.Auth = GetAuthTable(db)
+	c.Auth = GetAuthTable(gDB)
 	// Linked accounts table
-	c.Links = GetLinksTable(db)
+	c.Links = GetLinksTable(gDB)
 
 	return c
 }

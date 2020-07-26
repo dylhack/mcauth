@@ -2,7 +2,7 @@ package authcodes
 
 import (
 	"github.com/dhghf/mcauth/internal/common/db"
-	"os"
+	db2 "github.com/dhghf/mcauth/test/common/db"
 	"testing"
 )
 
@@ -12,7 +12,7 @@ var store *db.AuthTable
 
 func TestMain(m *testing.M) {
 	if store == nil {
-		storeDB := db.GetStore("./mcauth-test.db")
+		storeDB := db.GetStore(db2.TestConfig)
 		store = &storeDB.Auth
 	}
 	m.Run()
@@ -23,31 +23,38 @@ func TestAuthCodes(t *testing.T) {
 	t.Run("GetAuthCode", testGetAuthCode)
 	t.Run("GetPlayerID", testGetPlayerID)
 	t.Run("Authorize", testAuthorize)
-	t.Cleanup(func() { os.Remove("./mcauth-test.db") })
 }
 
 func testNewAuthCode(t *testing.T) {
-	result := store.NewAuthCode(playerUUID)
+	result, err := store.NewAuthCode(playerUUID)
 
-	if len(result) == 0 {
-		t.Error("NewAuthCode returned nothing")
+	if err != nil {
+		t.Error("NewAuthCode returned nothing, because ", err)
 	}
 	authCode = result
 }
 
 func testGetAuthCode(t *testing.T) {
-	result := store.GetAuthCode(playerUUID)
+	result, err := store.GetAuthCode(playerUUID)
+
+	if err != nil {
+		t.Error("GetAuthCode failed because, ", err)
+	}
 
 	if result != authCode {
-		t.Errorf("Failed GetAuthCode because \"%s\" != \"%s\"\n", authCode, result)
+		t.Errorf("GetAuthCode failed because \"%s\" != \"%s\"\n", authCode, result)
 	}
 }
 
 func testGetPlayerID(t *testing.T) {
-	result := store.GetPlayerID(authCode)
+	result, err := store.GetPlayerID(authCode)
+
+	if err != nil {
+		t.Error("GetPlayerID failed because, ", err)
+	}
 
 	if playerUUID != result {
-		t.Errorf("Failed GetPlayerID because \"%s\" != \"%s\"\n", playerUUID, result)
+		t.Errorf("GetPlayerID failed because \"%s\" != \"%s\"\n", playerUUID, result)
 	}
 }
 
@@ -55,6 +62,6 @@ func testAuthorize(t *testing.T) {
 	result, _ := store.Authorize(authCode)
 
 	if playerUUID != result {
-		t.Errorf("Failed Authorize because \"%s\" != \"%s\"\n", playerUUID, result)
+		t.Errorf("Authorize failed because \"%s\" != \"%s\"\n", playerUUID, result)
 	}
 }

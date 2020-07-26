@@ -6,140 +6,92 @@ package db
 import (
 	"database/sql"
 	"github.com/google/uuid"
-	"log"
+	"github.com/jinzhu/gorm"
 	"strings"
 )
 
 type AuthTable struct {
-	db   *sql.DB
-	fast map[string]string // For quickly storing and getting authentication codes from memory
+	db  *sql.DB
+	gDB *gorm.DB
 }
 
 type AuthCode struct {
-	AuthCode string // Pending authentication code
-	PlayerID string // The Minecraft player associated with the pending code
+	// Pending authentication code
+	AuthCode string `gorm:"column:auth_code;type:text;unique;not null"`
+	// The Minecraft player associated with the pending code
+	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
+}
+
+func (ac *AuthCode) TableName() string {
+	return "auth_codes"
 }
 
 // This will setup the table if it doesn't exist
-func GetAuthTable(db *sql.DB) AuthTable {
-	_, err := db.Exec(`
-CREATE TABLE IF NOT EXISTS auth_codes (
-    auth_code TEXT UNIQUE NOT NULL, 
-	player_id TEXT PRIMARY KEY NOT NULL)`,
-	)
+func GetAuthTable(gDB *gorm.DB) AuthTable {
+	gDB.AutoMigrate(&AuthCode{})
 
-	if err != nil {
-		log.Fatalln("Failed to init authentication table\n" + err.Error())
-	}
 	return AuthTable{
-		db:   db,
-		fast: map[string]string{},
+		db:  gDB.DB(),
+		gDB: gDB,
 	}
 }
 
 // This will get all the pending authentication codes in the table.
-func (at *AuthTable) GetAllAuthCodes() (authCodes []AuthCode) {
-	rows, err := at.db.Query(`SELECT * FROM "auth_codes"`)
-
-	if err != nil {
-		log.Println("Failed to get all auth codes", err.Error())
-		return authCodes
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		var authCode AuthCode
-
-		err = rows.Scan(&authCode.AuthCode, &authCode.PlayerID)
-
-		if err != nil {
-			log.Printf("Failed to scan an account because %s\n", err.Error())
-		} else {
-			authCodes = append(authCodes, authCode)
-		}
-	}
-
-	return authCodes
+func (at *AuthTable) GetAllAuthCodes() (authCodes []AuthCode, err error) {
+	err = at.gDB.
+		Find(&authCodes).
+		Error
+	return authCodes, err
 }
 
 // This will create a new authentication code for a given player UUID. If the player
 // already has an authentication code then their pending one will be returned instead.
-func (at *AuthTable) NewAuthCode(playerID string) (authCode string) {
+func (at *AuthTable) NewAuthCode(playerID string) (authCode string, err error) {
 	// get their pending authentication code if it exists
-	oldAuthCode := at.GetAuthCode(playerID)
+	oldAuthCode, _ := at.GetAuthCode(playerID)
 
 	if len(oldAuthCode) > 0 {
-		return oldAuthCode
+		return oldAuthCode, nil
 	}
 
 	newUUID := uuid.New()
 	authCode = strings.Split(newUUID.String(), "-")[0]
-
-	prep, _ := at.db.Prepare(`
-INSERT INTO auth_codes (auth_code, player_id) 
-VALUES ($1,$2)`,
-	)
-
-	_, err := prep.Exec(authCode, playerID)
-
-	defer prep.Close()
+	err = at.gDB.Create(&AuthCode{
+		AuthCode: authCode,
+		PlayerID: playerID,
+	}).Error
 
 	if err != nil {
-		log.Printf("Failed to store (%s/%s), because\n%s",
-			playerID, authCode, err.Error())
+		return "", err
 	} else {
-		at.fastStore(playerID, authCode)
+		return authCode, nil
 	}
-
-	return authCode
 }
 
 // This will get a pending authentication code of a player UUID. If it doesn't exist
 // than an empty string will be returned
-func (at *AuthTable) GetAuthCode(playerID string) (authCode string) {
-	authCode, isOK := at.fastLoad(playerID)
-	if isOK {
-		return authCode
+func (at *AuthTable) GetAuthCode(playerID string) (authCode string, err error) {
+	result := AuthCode{
+		AuthCode: "",
 	}
 
-	prep, _ := at.db.Prepare(`
-SELECT auth_code FROM auth_codes 
-WHERE player_id LIKE $1`,
-	)
-	rows, err := prep.Query(playerID)
+	err = at.gDB.
+		Find(&result, "player_id = ?", playerID).
+		Error
 
-	if err != nil {
-		return ""
-	}
-
-	defer prep.Close()
-	defer rows.Close()
-
-	for rows.Next() {
-		err = rows.Scan(&authCode)
-
-		if err != nil {
-			return ""
-		} else {
-			at.fastStore(playerID, authCode)
-			return authCode
-		}
-	}
-	return ""
+	return result.AuthCode, err
 }
 
 // Authorize a given authentication code. It will return the player ID associated with the given
 // auth code and the returned bool will be false.
 func (at *AuthTable) Authorize(authCode string) (playerID string, isOK bool) {
-	playerID = at.GetPlayerID(authCode)
+	playerID, _ = at.GetPlayerID(authCode)
 
 	// see if they have an authentication code
 	if len(playerID) > 0 {
 		isOK = true
 		// remove them from the database
 		go at.RemoveCode(authCode)
-		go at.fastRemove(authCode)
 
 		return playerID, isOK
 	} else {
@@ -149,83 +101,25 @@ func (at *AuthTable) Authorize(authCode string) (playerID string, isOK bool) {
 }
 
 // Get the player ID associated with the given authentication code.
-func (at *AuthTable) GetPlayerID(authCode string) (playerID string) {
-	playerID, isOK := at.fastLoad(authCode)
-
-	if isOK {
-		return playerID
+func (at *AuthTable) GetPlayerID(authCode string) (playerID string, err error) {
+	result := AuthCode{
+		PlayerID: "",
 	}
 
-	prep, _ := at.db.Prepare(`
-SELECT player_id FROM auth_codes 
-WHERE auth_code = $1`,
-	)
-	rows, _ := prep.Query(authCode)
-	defer rows.Close()
+	err = at.gDB.
+		Find(&result, "auth_code = ?", authCode).
+		Error
 
-	for rows.Next() {
-		err := rows.Scan(&playerID)
-
-		if err != nil {
-			return ""
-		} else {
-			at.fastStore(playerID, authCode)
-			return playerID
-		}
-	}
-	return ""
+	return result.PlayerID, err
 }
 
 // This will remove an authentication code given. The bool returned represents
 // if the authentication code removed was removed.
-func (at *AuthTable) RemoveCode(authCode string) bool {
-	prep, err := at.db.Prepare(`
-DELETE FROM auth_codes 
-WHERE auth_code = $1`,
-	)
-	if err != nil {
-		panic(err)
-	}
+func (at *AuthTable) RemoveCode(authCode string) (err error) {
+	err = at.gDB.
+		Where("auth_code = ? ", authCode).
+		Delete(AuthCode{}).
+		Error
 
-	defer prep.Close()
-	result, err := prep.Exec(authCode)
-
-	if err != nil {
-		log.Printf(
-			"Failed to remove \"%s\", because\n%s",
-			authCode,
-			err.Error(),
-		)
-		return false
-	} else {
-		effected, err := result.RowsAffected()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		return effected > 0
-	}
-}
-
-func (at *AuthTable) fastStore(authCode string, playerID string) {
-	at.fast[authCode] = playerID
-	at.fast[playerID] = authCode
-}
-
-func (at *AuthTable) fastRemove(identifier string) {
-	authCode, isOK := at.fast[identifier]
-	if isOK {
-		delete(at.fast, authCode)
-		delete(at.fast, identifier)
-	} else {
-		playerID, isOK := at.fast[identifier]
-		if isOK {
-			delete(at.fast, identifier)
-			delete(at.fast, playerID)
-		}
-	}
-}
-
-func (at *AuthTable) fastLoad(identifier string) (string, bool) {
-	result, isOK := at.fast[identifier]
-	return result, isOK
+	return err
 }
