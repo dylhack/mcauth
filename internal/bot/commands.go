@@ -9,12 +9,16 @@ import (
 	"strconv"
 )
 
-const commands = `These are all the commands:
+const commands = `**Commands**
  - {prefix} auth <authentication code>
  - {prefix} help
  - {prefix} whoami
  - {prefix} whois <player name or @ Discord user>
  - {prefix} status
+ - {prefix} unlink
+
+**Admin Commands**
+ - {prefix} unlink <player name or @ Discord user>
 `
 
 /* Regular Commands */
