@@ -61,13 +61,17 @@ Once the plug in has been setup and running it should now be protecting your Min
 actively listening to the players joining and verifying them.
 
 ## Bot Usage
-These are all the commands:
+__Regular Commands__
+
  * commands: Display these commands.
  * auth `code`: For linking your Minecraft account (this is given by the server on first time joining)
  * help: Display help message from config.yml
  * whoami: Displays the account you're linked with
- * whois `player name or @ Discord user`: Displays the account linked with a given player
+ * whois `player name or @user`: Displays the account linked with a given player
  * status: MCAuth status
+
+__Admin Commands__
+ * unlink `player name or @user`: To unlink another user
 
 ## Under The Hood
 
