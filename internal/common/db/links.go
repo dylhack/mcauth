@@ -21,7 +21,7 @@ type LinkedAcc struct {
 }
 
 func (LinkedAcc) TableName() string {
-	return schema + ".account_links"
+	return "account_links"
 }
 
 // This will create teh account_links table if it doesn't exist.

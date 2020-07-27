@@ -45,6 +45,8 @@ func GetStore(config Config) (c Store) {
 	}
 	db := gDB.DB()
 
+	gorm.DefaultTableNameHandler(gDB, schema+".")
+
 	if err = db.Ping(); err != nil {
 		log.Fatalln("Failed to ping the postgres database\n", err.Error())
 	}

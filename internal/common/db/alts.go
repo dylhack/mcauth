@@ -26,7 +26,7 @@ type AltAcc struct {
 }
 
 func (AltAcc) TableName() string {
-	return schema + ".alt_accounts"
+	return "alt_accounts"
 }
 
 // This will initialize the table if it doesn't exist. It will then return AltsTable where other

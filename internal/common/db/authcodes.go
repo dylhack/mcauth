@@ -23,7 +23,7 @@ type AuthCode struct {
 }
 
 func (AuthCode) TableName() string {
-	return schema + ".auth_codes"
+	return "auth_codes"
 }
 
 // This will setup the table if it doesn't exist
