@@ -126,9 +126,11 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	// see if they're an alt
 	alt, _ := bot.store.Alts.GetAlt(playerID)
 	if len(alt.Owner) > 0 {
+		userID, _ = bot.store.Links.GetDiscordID(alt.Owner)
+
 		util.Reply(
 			bot.client, msg.Message,
-			fmt.Sprintf("That %s is an alt of <@%s>", playerName, alt.Owner),
+			fmt.Sprintf("That %s is an alt of <@%s> (%s)", playerName, userID, alt.Owner),
 		)
 		return
 	} else {
