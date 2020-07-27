@@ -31,6 +31,8 @@ type Store struct {
 	Links LinksTable
 }
 
+const schema = "mcauth"
+
 func GetStore(config Config) (c Store) {
 	connConfig := fmt.Sprintf(
 		"user=%s password=%s host=%s database=%s port=%d sslmode=disable",
@@ -45,6 +47,10 @@ func GetStore(config Config) (c Store) {
 
 	if err = db.Ping(); err != nil {
 		log.Fatalln("Failed to ping the postgres database\n", err.Error())
+	}
+
+	if _, err := db.Exec("CREATE SCHEMA IF NOT EXISTS " + schema); err != nil {
+		log.Fatalf("Failed to create schema \"%s\" because,\n%s", schema, err)
 	}
 
 	c = Store{

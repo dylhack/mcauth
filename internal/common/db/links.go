@@ -20,8 +20,8 @@ type LinkedAcc struct {
 	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
 }
 
-func (la *LinkedAcc) TableName() string {
-	return "account_links"
+func (LinkedAcc) TableName() string {
+	return schema + ".account_links"
 }
 
 // This will create teh account_links table if it doesn't exist.

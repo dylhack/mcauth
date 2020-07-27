@@ -25,8 +25,8 @@ type AltAcc struct {
 	PlayerName string `json:"alt_name" gorm:"column:player_name;type:text;unique;not null"`
 }
 
-func (aa *AltAcc) TableName() string {
-	return "alt_accounts"
+func (AltAcc) TableName() string {
+	return schema + ".alt_accounts"
 }
 
 // This will initialize the table if it doesn't exist. It will then return AltsTable where other

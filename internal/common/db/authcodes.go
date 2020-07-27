@@ -22,8 +22,8 @@ type AuthCode struct {
 	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
 }
 
-func (ac *AuthCode) TableName() string {
-	return "auth_codes"
+func (AuthCode) TableName() string {
+	return schema + ".auth_codes"
 }
 
 // This will setup the table if it doesn't exist
