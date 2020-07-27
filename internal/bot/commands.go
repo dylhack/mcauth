@@ -114,16 +114,27 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	}
 
 	userID, _ := bot.store.Links.GetDiscordID(playerID)
-	if len(userID) == 0 {
-		util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
+	if len(userID) < 0 {
+		util.Reply(
+			bot.client,
+			msg.Message,
+			fmt.Sprintf("%s is <@%s> (%s/%s)", playerName, userID, playerID, userID),
+		)
 		return
 	}
 
-	util.Reply(
-		bot.client,
-		msg.Message,
-		fmt.Sprintf("%s is <@%s> (%s/%s)", playerName, userID, playerID, userID),
-	)
+	// see if they're an alt
+	alt, _ := bot.store.Alts.GetAlt(playerID)
+	if len(alt.Owner) > 0 {
+		util.Reply(
+			bot.client, msg.Message,
+			fmt.Sprintf("That %s is an alt of <@%s>", playerName, alt.Owner),
+		)
+		return
+	} else {
+		util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
+		return
+	}
 }
 
 // there are two ways of unlinking.
