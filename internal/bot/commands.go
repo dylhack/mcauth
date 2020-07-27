@@ -159,6 +159,16 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 
 	/* 2. An admin can unlink someone's account */
 	// then -> args is [<prefix>, unlink, <@Discord User> OR <Minecraft player name>]
+	if len(msg.GuildID) == 0 {
+		util.Reply(bot.client, msg.Message, "Run this command in a guild.")
+		return
+	}
+	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
+
+	if !isAdmin {
+		util.Reply(bot.client, msg.Message, "Only bot admin can run this command.")
+		return
+	}
 
 	// 2.1 Based on Discord user
 	// then -> msg.Mentions should be greater than 0
