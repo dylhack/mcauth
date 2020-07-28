@@ -137,7 +137,8 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		if !isAdmin {
 			util.Reply(
 				bot.client, msg.Message,
-				fmt.Sprintf("%s is an alt account of a staff member", playerName)
+				fmt.Sprintf("%s is an alt account of a staff member", playerName),
+			)
 			return
 		}
 
