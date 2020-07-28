@@ -131,6 +131,16 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	alt, _ := bot.store.Alts.GetAlt(playerID)
 	if len(alt.Owner) > 0 {
 		userID, _ = bot.store.Links.GetDiscordID(alt.Owner)
+		// protect identity of alt owner
+		_, isAdmin := bot.CheckRoles(msg.Member.Roles)
+
+		if !isAdmin {
+			util.Reply(
+				bot.client, msg.Message,
+				fmt.Sprintf("%s is an alt account of a staff member", playerName),
+			)
+			return
+		}
 
 		util.Reply(
 			bot.client, msg.Message,
