@@ -134,7 +134,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 
 		util.Reply(
 			bot.client, msg.Message,
-			fmt.Sprintf("That %s is an alt of <@%s> (%s)", playerName, userID, alt.Owner),
+			fmt.Sprintf("%s is an alt of <@%s> (%s)", playerName, userID, alt.Owner),
 		)
 		return
 	} else {
