@@ -118,7 +118,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	}
 
 	userID, _ := bot.store.Links.GetDiscordID(playerID)
-	if len(userID) < 0 {
+	if len(userID) > 0 {
 		util.Reply(
 			bot.client,
 			msg.Message,
