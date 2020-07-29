@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// TestConfig is the database configuration for testing, please modify before
+// testing.
 var TestConfig = db.Config{
 	Host:               "localhost",
 	Port:               5432,

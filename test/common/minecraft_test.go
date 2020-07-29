@@ -10,6 +10,7 @@ const (
 	playerUUID = "5bce3068e4f3489fb66b5723b2a7cdb1"
 )
 
+// TestGetUUID checks if the player name can resolve the linked UUID.
 func TestGetUUID(t *testing.T) {
 	result := common.GetPlayerID(playerName)
 
@@ -22,6 +23,7 @@ func TestGetUUID(t *testing.T) {
 	}
 }
 
+// TestGetName checks if the player UUID can resolve the linked name.
 func TestGetName(t *testing.T) {
 	result := common.GetPlayerName(playerUUID)
 

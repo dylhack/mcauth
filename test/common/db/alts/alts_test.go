@@ -13,6 +13,7 @@ var (
 	playerID   = "a1ddced8bb20466db456184d9de50346"
 )
 
+// TestMain is for getting the database connection before testing.
 func TestMain(m *testing.M) {
 	if store == nil {
 		storeDB := db.GetStore(db2.TestConfig)
@@ -21,6 +22,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
+// TestAlts tests the whole alt account management database table.
 func TestAlts(t *testing.T) {
 	t.Run("AddAlt", testAddAlt)
 	t.Run("GetAlt", testGetAlt)

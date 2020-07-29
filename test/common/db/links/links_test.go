@@ -12,6 +12,7 @@ var (
 	store      *db.LinksTable
 )
 
+// TestMain is for getting the database connection before testing.
 func TestMain(m *testing.M) {
 	if store == nil {
 		storeDB := db.GetStore(db2.TestConfig)
@@ -20,6 +21,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
+// TestLinks tests the whole Links table
 func TestLinks(t *testing.T) {
 	t.Run("NewLink", testNewLink)
 	t.Run("SetLink", testSetLink)
