@@ -128,6 +128,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Bragging Rights
  * http://pewdiemc.com/
- * https://www.youtube.com/post/UgzspFhgKPuA9jw9LZZ4AaABCQ
+ * [Members Only Post](https://www.youtube.com/post/UgzspFhgKPuA9jw9LZZ4AaABCQ)
 
 Glad to be serving [PewDiePie](https://youtube.com/pewdiepie). Floor Gang AOH!
