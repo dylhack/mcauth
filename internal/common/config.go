@@ -3,36 +3,37 @@ package common
 import (
 	util "github.com/Floor-Gang/utilpkg/config"
 	"github.com/dhghf/mcauth/internal/common/db"
-	"github.com/google/uuid"
+	googleUUID "github.com/google/uuid"
 	"log"
 	"strings"
 	"time"
 )
 
+// Config is all the configurations below combined.
 type Config struct {
 	DB        db.Config       `yaml:"database"`
 	Discord   DiscordConfig   `yaml:"discord_bot"`
 	WebServer WebServerConfig `yaml:"webserver"`
 }
 
+// DiscordConfig is the Discord bot config.
 type DiscordConfig struct {
-	// When a user asks for help this is what the bot responds with
-	Help   string `yaml:"help_message"`
-	Token  string `yaml:"token"`
-	Prefix string `yaml:"prefix"`
-	// Guild to serve
-	Guild string `yaml:"guild"`
-	// Roles to check for in a user
-	Whitelist []string `yaml:"whitelisted_roles"`
-	// Administrators that can manage the bot (this also counts as a whitelist)
+	Help       string   `yaml:"help_message"`
+	Token      string   `yaml:"token"`
+	Prefix     string   `yaml:"prefix"`
+	Guild      string   `yaml:"guild"`
+	Whitelist  []string `yaml:"whitelisted_roles"`
 	AdminRoles []string `yaml:"admin_roles"`
 }
 
+// WebServerConfig is the configuration attributes for the webserver talking to the plugin.
 type WebServerConfig struct {
 	Port  int    `yaml:"port"`
 	Token string `yaml:"token"`
 }
 
+// GetConfig reads and returns the config.yml. A new one will be created if the current one can't
+// be found in the CWD.
 func GetConfig(configPath string) (config Config) {
 	// default configuration, all the other attributes are blank
 	config = Config{
@@ -53,7 +54,7 @@ func GetConfig(configPath string) (config Config) {
 		},
 		WebServer: WebServerConfig{
 			Port:  5353,
-			Token: strings.Replace(uuid.New().String(), "-", "", 4),
+			Token: strings.Replace(googleUUID.New().String(), "-", "", 4),
 		},
 	}
 

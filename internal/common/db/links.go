@@ -1,18 +1,18 @@
-// The account links feature mcauth is where the magic happens. Here Minecraft player UUID's
-//(without hyphens) are associated with Discord user ID's (Twitter snowflakes). Once a user has
-// been authenticated using their authentication code (see authcodes.go) they will be stored here
-// with their Minecraft player UUID and Discord user ID on the same row entry
 package db
 
 import (
 	"github.com/jinzhu/gorm"
 )
 
+// LinksTable - The account links feature mcauth is where the magic happens. Here Minecraft
+// player UUID's (without hyphens) are associated with Discord user ID's (Twitter snowflakes).
+// Once a user has been authenticated using their authentication code (see authcodes.go) they will
+// be stored here with their Minecraft player UUID and Discord user ID on the same row entry
 type LinksTable struct {
 	gDB *gorm.DB
 }
 
-// This represents a linked account for a user
+// LinkedAcc represents a linked account for a Discord or Minecraft user.
 type LinkedAcc struct {
 	// Their Discord user ID (Twitter snowflake)
 	DiscordID string `gorm:"column:discord_id;type:text;unique;not null"`
@@ -20,11 +20,12 @@ type LinkedAcc struct {
 	PlayerID string `gorm:"column:player_id;type:text;unique;not null"`
 }
 
+// TableName gives GORM the table that linked accounts are stored.
 func (LinkedAcc) TableName() string {
 	return "account_links"
 }
 
-// This will create teh account_links table if it doesn't exist.
+// GetLinksTable will create the account_links table if it doesn't exist.
 // it will return LinksTable which can be used to interface with
 // the table.
 func GetLinksTable(gDB *gorm.DB) LinksTable {
@@ -35,7 +36,7 @@ func GetLinksTable(gDB *gorm.DB) LinksTable {
 	}
 }
 
-// This will get all the linked accounts in the table.
+// GetAllLinks will get all the linked accounts in the table.
 func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc, err error) {
 	err = lt.gDB.
 		Find(&linkedList).
@@ -44,7 +45,7 @@ func (lt *LinksTable) GetAllLinks() (linkedList []LinkedAcc, err error) {
 	return linkedList, err
 }
 
-// This will set a link whether it exists or not.
+// SetLink will set a link whether it exists or not.
 func (lt *LinksTable) SetLink(discordID, playerID string) error {
 	linked := LinkedAcc{
 		DiscordID: discordID,
@@ -58,7 +59,7 @@ func (lt *LinksTable) SetLink(discordID, playerID string) error {
 		Error
 }
 
-// This establishes a new account link.
+// NewLink establishes a new account link.
 func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 	linked := LinkedAcc{
 		DiscordID: discordID,
@@ -70,7 +71,7 @@ func (lt *LinksTable) NewLink(discordID string, playerID string) error {
 		Error
 }
 
-// This will remove a link based on the given identifier.
+// UnLink will remove a link based on the given identifier.
 // The identifier can be either their Discord user ID or
 // Minecraft player UUID (without hyphens).
 func (lt *LinksTable) UnLink(identifier string) error {
@@ -80,7 +81,7 @@ func (lt *LinksTable) UnLink(identifier string) error {
 		Error
 }
 
-// This will get a Discord user's associated Minecraft player UUID (without hyphens).
+// GetPlayerID will get a Discord user's associated Minecraft player UUID (without hyphens).
 func (lt *LinksTable) GetPlayerID(discordID string) (playerID string, err error) {
 	linked := LinkedAcc{
 		PlayerID: "",
@@ -92,7 +93,7 @@ func (lt *LinksTable) GetPlayerID(discordID string) (playerID string, err error)
 	return linked.PlayerID, err
 }
 
-// This will get a Minecraft player's associated Discord user ID.
+// GetDiscordID will get a Minecraft player's associated Discord user ID.
 func (lt *LinksTable) GetDiscordID(playerID string) (discordID string, err error) {
 	linked := LinkedAcc{
 		DiscordID: "",

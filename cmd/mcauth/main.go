@@ -5,6 +5,7 @@ import (
 	"github.com/dhghf/mcauth/internal/common"
 	"github.com/dhghf/mcauth/internal/common/db"
 	"github.com/dhghf/mcauth/internal/webserver"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 )
 

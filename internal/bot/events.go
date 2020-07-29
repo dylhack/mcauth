@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (bot *Bot) OnReady(_ *dg.Session, ready *dg.Ready) {
+func (bot *Bot) onReady(_ *dg.Session, ready *dg.Ready) {
 	// let's do a couple things:
 	// * Check that we're on the Discord server that we're serving.
 	// * Check all the roles they gave us through the config exists
@@ -20,15 +20,15 @@ func (bot *Bot) OnReady(_ *dg.Session, ready *dg.Ready) {
 	}
 
 	// * Check all the roles they gave us through the config exists (whitelist first)
-	CheckRoles(roles, bot.config.Whitelist)
+	verifyRoles(roles, bot.config.Whitelist)
 
 	// * Check all the roles they gave us through the config exists (administrator roles)
-	CheckRoles(roles, bot.config.AdminRoles)
+	verifyRoles(roles, bot.config.AdminRoles)
 
 	log.Printf("Ready as %s, serving %s\n", ready.User.Username, guild.Name)
 }
 
-func CheckRoles(roles []*dg.Role, given []string) {
+func verifyRoles(roles []*dg.Role, given []string) {
 	var found bool
 	for _, givenID := range given {
 		found = false
@@ -44,7 +44,7 @@ func CheckRoles(roles []*dg.Role, given []string) {
 	}
 }
 
-func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
+func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	// ignore bots and messages that don't start with the prefix
 	if msg.Author.Bot || !strings.HasPrefix(msg.Content, bot.config.Prefix) {
 		return
@@ -52,7 +52,7 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 
 	// args = [<prefix>, <sub-command>]
 	args := strings.Fields(msg.Content)
-	isAdmin := bot.IsAdmin(msg.Member)
+	isAdmin := bot.isAdmin(msg.Member)
 	// whether they attempted to run an administrator related command
 	adminAttempt := false
 
@@ -64,22 +64,17 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 	/* User Commands */
 	case "auth":
 		bot.cmdAuth(msg, args)
-		break
 	case "whoami":
 		bot.cmdWhoAmI(msg)
-		break
 	case "whois":
 		bot.cmdWhoIs(msg, args)
-		break
 	case "unlink":
 		bot.cmdUnlink(msg, args)
-		break
 	case "commands":
-		util.Reply(
+		_, _ = util.Reply(
 			bot.client, msg.Message,
 			strings.Replace(commands, "{prefix}", bot.config.Prefix, -1),
 		)
-		break
 	/* Administrator Commands */
 	case "status":
 		if isAdmin {
@@ -87,42 +82,38 @@ func (bot *Bot) OnMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		} else {
 			adminAttempt = true
 		}
-		break
 	case "lock":
 		if isAdmin {
 			bot.locked = true
-			util.Reply(bot.client, msg.Message, "Maintenance mode is now on.")
+			_, _ = util.Reply(bot.client, msg.Message, "Maintenance mode is now on.")
 		} else {
 			adminAttempt = true
 		}
-		break
 	case "unlock":
 		if isAdmin {
 			bot.locked = false
-			util.Reply(bot.client, msg.Message, "Maintenance mode is now off.")
+			_, _ = util.Reply(bot.client, msg.Message, "Maintenance mode is now off.")
 		} else {
 			adminAttempt = true
 		}
-		break
 	default:
-		util.Reply(bot.client, msg.Message, bot.config.Help)
-		break
+		_, _ = util.Reply(bot.client, msg.Message, bot.config.Help)
 	}
 	if adminAttempt {
-		util.Reply(bot.client, msg.Message,
+		_, _ = util.Reply(bot.client, msg.Message,
 			"You must be an administrator to run this command.",
 		)
 	}
 }
 
-func (bot *Bot) OnGuildMemberUpdate(_ *dg.Session, event *dg.GuildMemberUpdate) {
-	bot.Sync(event.User.ID)
+func (bot *Bot) onGuildMemberUpdate(_ *dg.Session, event *dg.GuildMemberUpdate) {
+	bot.syncMember(event.User.ID)
 }
 
 func (bot *Bot) onGuildMemberAdd(_ *dg.Session, event *dg.GuildMemberAdd) {
-	bot.Sync(event.User.ID)
+	bot.syncMember(event.User.ID)
 }
 
 func (bot *Bot) onGuildMemberRemove(_ *dg.Session, event *dg.GuildMemberRemove) {
-	bot.Sync(event.User.ID)
+	bot.syncMember(event.User.ID)
 }

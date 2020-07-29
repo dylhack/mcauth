@@ -7,8 +7,7 @@ import (
 	"net/http"
 )
 
-/* error handlers */
-// Missing Player UUID Attribute.
+// NoPlayerError means that the request is missing the player UUID attribute.
 func NoPlayerError(res http.ResponseWriter) {
 	noPlayer := common.ErrorResponse{
 		ErrorCode: "NO_PLAYER_ID",
@@ -18,9 +17,7 @@ func NoPlayerError(res http.ResponseWriter) {
 	ShipError(res, noPlayer)
 }
 
-/* error handlers - alt account management */
-
-// Missing Player Name Attribute.
+// NoAltNameError means that the request is missing the player name attribute.
 func NoAltNameError(res http.ResponseWriter) {
 	noAltName := common.ErrorResponse{
 		ErrorCode: "MISSING_ALT_NAME",
@@ -30,7 +27,7 @@ func NoAltNameError(res http.ResponseWriter) {
 	ShipError(res, noAltName)
 }
 
-// Invalid Alt Name.
+// InvalidAltNameError means the request is has an invalid alt player name.
 func InvalidAltNameError(res http.ResponseWriter) {
 	invalidAltName := common.ErrorResponse{
 		ErrorCode: "INVALID_ALT_NAME",
@@ -40,7 +37,7 @@ func InvalidAltNameError(res http.ResponseWriter) {
 	ShipError(res, invalidAltName)
 }
 
-// Missing Owner Attribute.
+// NoOwnerError means the request is missing the owner attribute.
 func NoOwnerError(res http.ResponseWriter) {
 	noOwner := common.ErrorResponse{
 		ErrorCode: "NO_OWNER",
@@ -50,7 +47,7 @@ func NoOwnerError(res http.ResponseWriter) {
 	ShipError(res, noOwner)
 }
 
-// Invalid Owner.
+// InvalidOwnerError means the request gave an invalid owner Minecraft player name.
 func InvalidOwnerError(res http.ResponseWriter) {
 	invalidOwner := common.ErrorResponse{
 		ErrorCode: "INVALID_OWNER",
@@ -60,7 +57,7 @@ func InvalidOwnerError(res http.ResponseWriter) {
 	ShipError(res, invalidOwner)
 }
 
-// Alt Already Added.
+// AltAlreadyExistsError means the alt already exists in the database.
 func AltAlreadyExistsError(res http.ResponseWriter) {
 	altAlreadyExists := common.ErrorResponse{
 		ErrorCode: "ALT_ALREADY_ADDED",
@@ -70,6 +67,7 @@ func AltAlreadyExistsError(res http.ResponseWriter) {
 	ShipError(res, altAlreadyExists)
 }
 
+// ShipError prepares and sends an error response given.
 func ShipError(res http.ResponseWriter, response interface{}) {
 	res.Header().Set("Content-Type", "application/json")
 	serialized, err := json.Marshal(response)

@@ -50,6 +50,7 @@ func (server *Server) getAllAlts(res http.ResponseWriter, _ *http.Request) {
 	Ship(res, response)
 }
 
+// NewAlt represents a new incoming alt account.
 type NewAlt struct {
 	PlayerName string `json:"player_name"`
 }

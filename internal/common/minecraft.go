@@ -8,24 +8,25 @@ import (
 	"net/http"
 )
 
-type Profile struct {
+type profile struct {
 	ID         string    `json:"id"`
 	Name       string    `json:"name"`
-	Properties []Texture `json:"properties"`
+	Properties []texture `json:"properties"`
 }
 
-type UUID struct {
+type uuid struct {
 	ID   string `json:"id"`
 	Name string `json:"username"`
 }
 
-type Texture struct {
+type texture struct {
 	Name      string `json:"name"`
 	Value     string `json:"value"`
 	Signature string `json:"signature"`
 }
 
-// an empty string will return if an error occurred or there was no result
+// GetPlayerName gets a Minecraft player name of a player UUID. It will return an empty string if
+// nothing was found.
 func GetPlayerName(playerID string) string {
 	resp, err := http.Get(
 		"https://sessionserver.mojang.com/session/minecraft/profile/" + playerID,
@@ -38,7 +39,7 @@ func GetPlayerName(playerID string) string {
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var profile Profile
+	var profile profile
 
 	err = json.Unmarshal(body, &profile)
 
@@ -50,6 +51,8 @@ func GetPlayerName(playerID string) string {
 	return profile.Name
 }
 
+// GetPlayerID will get the UUID of a given Minecraft player name.
+// An empty string will be returned if nothing was found.
 func GetPlayerID(playerName string) string {
 	names := []string{playerName}
 	serialized, _ := json.Marshal(names)
@@ -66,7 +69,7 @@ func GetPlayerID(playerName string) string {
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var result []UUID
+	var result []uuid
 
 	err = json.Unmarshal(body, &result)
 
@@ -77,7 +80,6 @@ func GetPlayerID(playerName string) string {
 
 	if len(result) > 0 {
 		return result[0].ID
-	} else {
-		return ""
 	}
+	return ""
 }

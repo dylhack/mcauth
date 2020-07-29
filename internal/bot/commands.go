@@ -26,7 +26,7 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 	// args = [<prefix>, "auth", <auth code>]
 
 	if len(args) < 3 {
-		util.Reply(bot.client, msg.Message,
+		_, _ = util.Reply(bot.client, msg.Message,
 			fmt.Sprintf("%s auth <authentication code>", bot.config.Prefix),
 		)
 		return
@@ -34,7 +34,7 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 
 	// check if they're not already linked with an account
 	if account, _ := bot.store.Links.GetPlayerID(msg.Author.ID); len(account) > 0 {
-		util.Reply(bot.client, msg.Message, "You're already linked with an account.")
+		_, _ = util.Reply(bot.client, msg.Message, "You're already linked with an account.")
 		return
 	}
 
@@ -42,13 +42,13 @@ func (bot *Bot) cmdAuth(msg *dg.MessageCreate, args []string) {
 	if playerID, isOK := bot.store.Auth.Authorize(authCode); isOK {
 		err := bot.store.Links.NewLink(msg.Author.ID, playerID)
 		if err == nil {
-			util.Reply(bot.client, msg.Message, "Linked.")
+			_, _ = util.Reply(bot.client, msg.Message, "Linked.")
 		} else {
 			log.Printf("Something went wrong while linking \"%s\" because \n%s\n",
 				msg.Author.ID, err.Error())
 		}
 	} else {
-		util.Reply(bot.client, msg.Message, "Invalid authentication code.")
+		_, _ = util.Reply(bot.client, msg.Message, "Invalid authentication code.")
 	}
 }
 
@@ -56,16 +56,24 @@ func (bot *Bot) cmdWhoAmI(msg *dg.MessageCreate) {
 	playerID, _ := bot.store.Links.GetPlayerID(msg.Author.ID)
 
 	if len(playerID) == 0 {
-		util.Reply(bot.client, msg.Message, "You aren't linked with any Minecraft accounts.")
+		_, _ = util.Reply(
+			bot.client,
+			msg.Message,
+			"You aren't linked with any Minecraft accounts.",
+		)
 		return
 	}
 
 	playerName := common.GetPlayerName(playerID)
 
 	if len(playerName) > 0 {
-		util.Reply(bot.client, msg.Message, "You are: "+playerName)
+		_, _ = util.Reply(bot.client, msg.Message, "You are: "+playerName)
 	} else {
-		util.Reply(bot.client, msg.Message, "I failed to find your associated Minecraft player name")
+		_, _ = util.Reply(
+			bot.client,
+			msg.Message,
+			"I failed to find your associated Minecraft player name",
+		)
 	}
 }
 
@@ -77,13 +85,13 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		playerID, _ = bot.store.Links.GetPlayerID(user.ID)
 
 		if len(playerID) == 0 {
-			util.Reply(bot.client, msg.Message, "I don't know that user.")
+			_, _ = util.Reply(bot.client, msg.Message, "I don't know that user.")
 			return
 		}
 		playerName = common.GetPlayerName(playerID)
 
 		if len(playerName) == 0 {
-			util.Reply(
+			_, _ = util.Reply(
 				bot.client,
 				msg.Message,
 				"I failed to get the player name but this is the ID"+
@@ -91,7 +99,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 			)
 			return
 		}
-		util.Reply(
+		_, _ = util.Reply(
 			bot.client,
 			msg.Message,
 			fmt.Sprintf("%s is %s (%s)", user.Mention(), playerName, playerID),
@@ -102,7 +110,7 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	// if they didn't mention a user then check if they're talking a minecraft
 	// args = [<prefix>, "whois", <minecraft player name>]
 	if len(args) < 3 {
-		util.Reply(
+		_, _ = util.Reply(
 			bot.client, msg.Message,
 			fmt.Sprintf("%s whois <Minecraft player name>", bot.config.Prefix),
 		)
@@ -113,13 +121,13 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 	playerID = common.GetPlayerID(playerName)
 
 	if len(playerID) == 0 {
-		util.Reply(bot.client, msg.Message, "That isn't a Minecraft player")
+		_, _ = util.Reply(bot.client, msg.Message, "That isn't a Minecraft player")
 		return
 	}
 
 	userID, _ := bot.store.Links.GetDiscordID(playerID)
 	if len(userID) > 0 {
-		util.Reply(
+		_, _ = util.Reply(
 			bot.client,
 			msg.Message,
 			fmt.Sprintf("%s is <@%s> (%s/%s)", playerName, userID, playerID, userID),
@@ -135,22 +143,20 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 		_, isAdmin := bot.CheckRoles(msg.Member.Roles)
 
 		if !isAdmin {
-			util.Reply(
+			_, _ = util.Reply(
 				bot.client, msg.Message,
 				fmt.Sprintf("%s is an alt account of a staff member", playerName),
 			)
 			return
 		}
 
-		util.Reply(
+		_, _ = util.Reply(
 			bot.client, msg.Message,
 			fmt.Sprintf("%s is an alt of <@%s> (%s)", playerName, userID, alt.Owner),
 		)
 		return
-	} else {
-		util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
-		return
 	}
+	_, _ = util.Reply(bot.client, msg.Message, "That user isn't linked with anything")
 }
 
 // there are two ways of unlinking.
@@ -164,9 +170,9 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	// then -> args should be [<prefix>, unlink]
 	if len(args) < 3 {
 		if err = bot.store.Links.UnLink(msg.Author.ID); err != nil {
-			util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+			_, _ = util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
 		} else {
-			util.Reply(bot.client, msg.Message, "Unlinked.")
+			_, _ = util.Reply(bot.client, msg.Message, "Unlinked.")
 		}
 		return
 	}
@@ -174,13 +180,13 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	/* 2. An admin can unlink someone's account */
 	// then -> args is [<prefix>, unlink, <@Discord User> OR <Minecraft player name>]
 	if len(msg.GuildID) == 0 {
-		util.Reply(bot.client, msg.Message, "Run this command in a guild.")
+		_, _ = util.Reply(bot.client, msg.Message, "Run this command in a guild.")
 		return
 	}
 	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
 
 	if !isAdmin {
-		util.Reply(bot.client, msg.Message, "Only bot admin can run this command.")
+		_, _ = util.Reply(bot.client, msg.Message, "Only bot admin can run this command.")
 		return
 	}
 
@@ -189,9 +195,13 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	if len(msg.Mentions) > 0 {
 		user := msg.Mentions[0]
 		if err = bot.store.Links.UnLink(user.ID); err != nil {
-			util.Reply(bot.client, msg.Message, "That user wasn't linked with any account.")
+			_, _ = util.Reply(
+				bot.client,
+				msg.Message,
+				"That user wasn't linked with any account.",
+			)
 		} else {
-			util.Reply(bot.client, msg.Message, "Unlinked "+user.Mention()+".")
+			_, _ = util.Reply(bot.client, msg.Message, "Unlinked "+user.Mention()+".")
 		}
 		return
 	}
@@ -202,14 +212,14 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	playerID := common.GetPlayerID(playerName)
 
 	if len(playerID) == 0 {
-		util.Reply(bot.client, msg.Message, playerName+" isn't a Minecraft account.")
+		_, _ = util.Reply(bot.client, msg.Message, playerName+" isn't a Minecraft account.")
 		return
 	}
 
 	if err = bot.store.Links.UnLink(playerID); err != nil {
-		util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+		_, _ = util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
 	} else {
-		util.Reply(bot.client, msg.Message, "Unlinked "+playerName+".")
+		_, _ = util.Reply(bot.client, msg.Message, "Unlinked "+playerName+".")
 	}
 }
 
