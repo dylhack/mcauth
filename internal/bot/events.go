@@ -52,9 +52,6 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 
 	// args = [<prefix>, <sub-command>]
 	args := strings.Fields(msg.Content)
-	isAdmin := bot.isAdmin(msg.Member)
-	// whether they attempted to run an administrator related command
-	adminAttempt := false
 
 	if len(args) < 2 {
 		return
@@ -75,32 +72,45 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 			bot.client, msg.Message,
 			strings.Replace(commands, "{prefix}", bot.config.Prefix, -1),
 		)
+	default:
+		bot.onAdminCommand(msg.Message, args)
+	}
+}
+
+func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
+	isAdmin := bot.isAdmin(msg.Member)
+
+	// whether they attempted to run an administrator related command
+	adminAttempt := false
+
+	switch args[1] {
 	/* Administrator Commands */
 	case "status":
 		if isAdmin {
-			bot.cmdStatus(msg.Message)
+			bot.cmdStatus(msg)
 		} else {
 			adminAttempt = true
 		}
 	case "lock":
 		if isAdmin {
 			bot.locked = true
-			_, _ = util.Reply(bot.client, msg.Message, "Maintenance mode is now on.")
+			_, _ = util.Reply(bot.client, msg, "Maintenance mode is now on.")
 		} else {
 			adminAttempt = true
 		}
 	case "unlock":
 		if isAdmin {
 			bot.locked = false
-			_, _ = util.Reply(bot.client, msg.Message, "Maintenance mode is now off.")
+			_, _ = util.Reply(bot.client, msg, "Maintenance mode is now off.")
 		} else {
 			adminAttempt = true
 		}
 	default:
-		_, _ = util.Reply(bot.client, msg.Message, bot.config.Help)
+		_, _ = util.Reply(bot.client, msg, bot.config.Help)
 	}
+
 	if adminAttempt {
-		_, _ = util.Reply(bot.client, msg.Message,
+		_, _ = util.Reply(bot.client, msg,
 			"You must be an administrator to run this command.",
 		)
 	}
