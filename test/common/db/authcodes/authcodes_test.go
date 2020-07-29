@@ -10,6 +10,7 @@ var playerUUID = "5bce3068e4f3489fb66b5723b2a7cdb1"
 var authCode string
 var store *db.AuthTable
 
+// TestMain is for getting the database connection before testing.
 func TestMain(m *testing.M) {
 	if store == nil {
 		storeDB := db.GetStore(db2.TestConfig)
@@ -18,6 +19,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
+// TestAuthCodes tests the whole auth_codes database table.
 func TestAuthCodes(t *testing.T) {
 	t.Run("NewAuthCode", testNewAuthCode)
 	t.Run("GetAuthCode", testGetAuthCode)

@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// TestGetStore tests connecting to the database.
 func TestGetStore(t *testing.T) {
 	db.GetStore(TestConfig)
 }
