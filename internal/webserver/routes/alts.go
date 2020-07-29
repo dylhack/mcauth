@@ -1,10 +1,11 @@
 package routes
 
 import (
+	"net/http"
+
 	c "github.com/dhghf/mcauth/internal/common"
 	"github.com/dhghf/mcauth/internal/common/db"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 // Get all the alt accounts associated with an owner.
@@ -80,6 +81,13 @@ func (server *Server) postAlt(res http.ResponseWriter, req *http.Request) {
 		return
 	} else if len(playerID) == 0 {
 		InvalidAltNameError(res)
+		return
+	}
+
+	// prevention of alts owning alts
+	ownerOwner, _ := store.GetAlt(ownerID)
+	if len(ownerOwner.Owner) != 0 {
+		InvalidOwnerError(res)
 		return
 	}
 
