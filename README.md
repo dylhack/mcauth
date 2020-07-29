@@ -1,4 +1,5 @@
 ![Build](https://github.com/dhghf/mcauth/workflows/Build/badge.svg?branch=production)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dhghf/mcauth)](https://goreportcard.com/report/github.com/dhghf/mcauth)
 
 # MCAuth
 For linking your Minecraft and Discord account together. MCAuth is for 
