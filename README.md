@@ -123,5 +123,11 @@ Shortest transaction:        0.00
  - `y` A minor change, an important server-only change was made
  - `z` A patch, an insignificant change
 
-### Further Dev Information
-See [Endpoints.md](./docs/Endpoints.md)
+### Further Developer Information
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Bragging Rights
+ * http://pewdiemc.com/
+ * https://www.youtube.com/post/UgzspFhgKPuA9jw9LZZ4AaABCQ
+
+Glad to be serving [PewDiePie](https://youtube.com/pewdiepie). Floor Gang AOH!
