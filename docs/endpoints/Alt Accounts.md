@@ -5,6 +5,27 @@ useful for mostly alts, but also any player you want to join without question. I
 check to see if the owner of the alt is authenticated which can only be done by administrators
 of the server.
 
+## GET /alts
+Possible Errors:
+ * None
+
+### Required Headers
+ 1. Authorization: `<webserver token>` 
+
+### Response Body
+| Attribute | Type     | Description           |
+|-----------|----------|-----------------------|
+| alt_accs  | AltAcc[] | An array of AltAcc's  |
+
+#### AltAcc
+| Attribute | Type   | Description                    |
+|-----------|--------|--------------------------------|
+| owner     | string | The person who claimed the alt |
+| alt_name  | string | The Minecraft player name alt  |
+| alt_id    | string | The Minecraft player UUID alt  |
+
+
+
 ## GET /alts/{owner}
 Possible Errors:
  * [Missing Owner Attribute](#Missing-Owner-Attribute)
@@ -13,16 +34,18 @@ Possible Errors:
  1. Authorization: `<webserver token>` 
 
 ### Response Body
-| Attribute | Type     | Description          |
-|-----------|----------|----------------------|
-| alt_accs  | AltAcc[] | An array of AltAcc's |
+| Attribute | Type     | Description           |
+|-----------|----------|-----------------------|
+| alt_accs  | AltAcc[] | An array of AltAcc's  |
+| owner     | string   | The owner of alt_accs | 
 
-#### AltAcc typedef
+#### AltAcc
 | Attribute | Type   | Description                    |
 |-----------|--------|--------------------------------|
 | owner     | string | The person who claimed the alt |
 | alt_name  | string | The Minecraft player name alt  |
 | alt_id    | string | The Minecraft player UUID alt  |
+
 
 
 ## POST /alts/{owner}/{player name}
@@ -40,6 +63,8 @@ Possible Errors:
 
 ### Response Body
 Empty (200 OK)
+
+
 
 ## DELETE /alts/{alt name}
 Possible Errors:

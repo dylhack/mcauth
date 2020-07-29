@@ -4,7 +4,7 @@ Discord user ID's (twitter snowflakes) are stored together on the same row. This
 linked account. This one endpoint allows external clients to verify a given Minecraft player based
 on their Minecraft UUID (without hyphens).
 
-## POST /verify/{Player UUID}
+## GET /verify/{Player UUID}
 Possible Errors:
  * [Missing Player UUID Attribute](#Missing-Player-UUID-Attribute)
 
