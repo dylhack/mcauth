@@ -1,20 +1,19 @@
-// The Minecraft server administrators can use alt account management to claim Minecraft players
-// as their alts. This will allow those players to join without authentication. This is super
-// useful for mostly alts, but also any player you want to join without question. It will still
-// check to see if the owner of the alt is authenticated which can only be done by administrators
-// of the server.
 package db
 
 import (
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-// This struct has methods for managing the "alt" table.
+// AltsTable - The Minecraft server administrators can use alt account management to claim Minecraft
+// players as their alts. This will allow those players to join without authentication. This is
+// super useful for mostly alts, but also any player you want to join without question. It will
+// still check to see if the owner of the alt is authenticated which can only be done by
+// administrators of the server.
 type AltsTable struct {
 	gDB *gorm.DB
 }
 
+// AltAcc represents an alt account claimed by an admin.
 type AltAcc struct {
 	// The person who claimed the alt
 	Owner string `json:"alt_owner" gorm:"column:owner;type:text;unique;not null"`
@@ -25,12 +24,13 @@ type AltAcc struct {
 	PlayerName string `json:"alt_name" gorm:"column:player_name;type:text;unique;not null"`
 }
 
+// TableName gives GORM the table name for account management.
 func (AltAcc) TableName() string {
 	return "alt_accounts"
 }
 
-// This will initialize the table if it doesn't exist. It will then return AltsTable where other
-// functions can access this database table.
+// GetAltsTable will initialize the table if it doesn't exist. It will then return AltsTable
+// where other functions can access this database table.
 func GetAltsTable(gDB *gorm.DB) AltsTable {
 	gDB.AutoMigrate(&AltAcc{})
 
@@ -39,7 +39,10 @@ func GetAltsTable(gDB *gorm.DB) AltsTable {
 	}
 }
 
-// Add a new alt account.
+// AddAlt adds a new alt account.
+// owner must be the owner player name.
+// playerID must be the player's UUID.
+// playerName must be the player's in-game name.
 func (at *AltsTable) AddAlt(owner string, playerID string, playerName string) error {
 	altAcc := AltAcc{
 		Owner:      owner,
@@ -61,7 +64,7 @@ func (at *AltsTable) RemAlt(identifier string) error {
 		Error
 }
 
-// This will get all the alt accounts in the database.
+// GetAllAlts will get all the alt accounts in the database.
 func (at *AltsTable) GetAllAlts() (result []AltAcc, err error) {
 	err = at.gDB.
 		Find(&result).

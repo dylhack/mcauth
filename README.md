@@ -1,7 +1,11 @@
+![Build](https://github.com/dhghf/mcauth/workflows/Build/badge.svg?branch=production)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dhghf/mcauth)](https://goreportcard.com/report/github.com/dhghf/mcauth)
+
 # MCAuth
-For linking your Minecraft and Discord account together. MCAuth is for Minecraft server owners
-to allow the right players in their Discord to play on their server. MCAuth uses authentication
-codes which allows players to link their accounts with ease.
+For linking your Minecraft and Discord account together. MCAuth is for 
+Minecraft server owners to allow the right players in their Discord to play on
+their server. MCAuth uses authentication codes which allows players to link 
+their accounts with ease.
 
 MCAuth is under the [GNU General Public License 3](./LICENSE)
 
@@ -24,41 +28,17 @@ $ go build
 ```
 
 ### 2. Configure
-An executable file will be created in the directory, run it once, and it will generate a default
-config file. Fill out the config file, here is a reference:
-```yaml
-database:                      # Postgres Database Configuration
-  host:                 ""     # Postgres server
-  port:                 5432   # Postgres server port
-  username:             ""     # Postgres user username
-  password:             ""     # Postgres user password
-  database_name:        ""     # Postgres database used
-  max_connections:      50     # Max active connections
-  max_idle_connections: 50     # Max idle connections
-  conn_lifespan:        1h0m0s # How long should active / idle connections last
-
-discord_bot:                  # Discord Bot Configuration
-  help_message:         ""    # The users will retrieve this message when using the bot incorrectly 
-                              # or calling help
-  token:                ""    # Discord bot access token
-  prefix:               ""    # Discord command prefix ie ".mc help"
-  guild:                ""    # The ID of the Discord server that's being served
-  whitelisted_roles:    []    # Users with any of these roles will be allowed to join the server
-  admin_roles:          []    # Users with any of these roles can administrate the bot and add their 
-                              # alt accounts (see below)
-
-webserver:                    # Web Server Configuration
-  port:                 5353  # The port the Web Server should listen on 
-  token:                ""    # This will be generated for you, but this is for the plugin so that
-                              # nobody else can interact with the webserver without the required token
-```
+An executable file will be created in the directory, run it once, and it will 
+generate a default config file. Fill out the config file. A guide is provided 
+[here](./docs/extra/Configuration.md)
 
 ### 3. Setup the Plugin
 [Visit the plugin's README](https://github.com/dhghf/mcauth-client/blob/master/README.md)
 
 ### 4. Setup Complete
-Once the plug in has been setup and running it should now be protecting your Minecraft server and
-actively listening to the players joining and verifying them.
+Once the plug in has been setup and running it should now be protecting your
+Minecraft server and actively listening to the players joining and verifying
+them.
 
 ## Bot Usage
 __Regular Commands__
@@ -76,28 +56,32 @@ __Admin Commands__
 ## Under The Hood
 
 ### Databasing
-We use Postgres driver [github.com/lib/pq](https://github.com/lib/pq) and ORM [GORM](https://gorm.io)
+We use Postgres driver [github.com/lib/pq](https://github.com/lib/pq) and ORM
+[GORM](https://gorm.io)
 
 ### Verifying
-When a new player joins the Minecraft server it first checks to see if they're linked with an account.
+When a new player joins the Minecraft server it first checks to see if they're
+linked with an account.
 
 #### If they are linked
-If they are linked then it will get their roles that are stored in memory, if their roles aren't 
-already synced then the bot will reach out and stay up-to-date on their roles so that the bot won't
-have to request the guild member's roles every time they join in the future.
+If they are linked then it will get their roles that are stored in memory, if
+their roles aren't already synced then the bot will reach out and stay
+up-to-date on their roles so that the bot won't have to request the guild
+member's roles every time they join in the future.
 
 
 #### If they're not linked
-If they aren't linked then it gets their already pending authentication code or it generates the 
-new one.
+If they aren't linked then it gets their already pending authentication code
+or it generates the new one.
 
 ### Benchmarks
 Last tested `July 26th, 2020`
 
 __Notes__
 
-A "sync" is when the Discord bot fetchs a player's roles on Discord. It will keep up-to-date on the
-player's roles so it will never have to fetch the roles again in the future.
+A "sync" is when the Discord bot fetchs a player's roles on Discord. It will
+keep up-to-date on the player's roles so it will never have to fetch the roles
+again in the future.
  * This is only using the same 50 player UUID's
  * The first post is the initial sync of those 50 players
  * The second post is the same 50 players after the initial sync
@@ -144,5 +128,11 @@ Shortest transaction:        0.00
  - `y` A minor change, an important server-only change was made
  - `z` A patch, an insignificant change
 
-### Further Dev Information
-See [Endpoints.md](./docs/Endpoints.md)
+### Further Developer Information
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Bragging Rights
+ * http://pewdiemc.com/
+ * [Members Only Post](https://www.youtube.com/post/UgzspFhgKPuA9jw9LZZ4AaABCQ)
+
+Glad to be serving [PewDiePie](https://youtube.com/pewdiepie). Floor Gang AOH!

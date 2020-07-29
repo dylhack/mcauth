@@ -10,12 +10,14 @@ import (
 	"net/http"
 )
 
+// Server represents the webserver brought together.
 type Server struct {
 	Bot    *bot.Bot
 	Store  *db.Store
 	Config *common.WebServerConfig
 }
 
+// StartAllRoutes starts listening on all the routes needed.
 func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfig, router *mux.Router) {
 	server := &Server{
 		Bot: bot, Store: store, Config: config,
@@ -46,6 +48,7 @@ func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfi
 		Methods("DELETE")
 }
 
+// Ship sends a response body.
 func Ship(res http.ResponseWriter, response interface{}) {
 	res.Header().Set("Content-Type", "application/json")
 	serialized, err := json.Marshal(response)

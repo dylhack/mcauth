@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Bot represents the Discord bot.
 type Bot struct {
 	client *dg.Session
 	store  *db.Store
@@ -17,6 +18,7 @@ type Bot struct {
 	locked bool
 }
 
+// StartBot starts the Discord bot. It will return a pointer to the Bot for the webserver to use.
 func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 	client, _ := dg.New("Bot " + config.Token)
 
@@ -32,9 +34,11 @@ func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 		sync:   GetSyncHandler(),
 	}
 
-	client.AddHandler(bot.OnMessage)
-	client.AddHandler(bot.OnGuildMemberUpdate)
-	client.AddHandlerOnce(bot.OnReady)
+	client.AddHandler(bot.onMessage)
+	client.AddHandler(bot.onGuildMemberAdd)
+	client.AddHandler(bot.onGuildMemberRemove)
+	client.AddHandler(bot.onGuildMemberUpdate)
+	client.AddHandlerOnce(bot.onReady)
 
 	log.Println("Starting to Discord bot...")
 
@@ -44,7 +48,7 @@ func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 	return bot
 }
 
-func (bot *Bot) IsAdmin(member *dg.Member) bool {
+func (bot *Bot) isAdmin(member *dg.Member) bool {
 	for _, roleID := range member.Roles {
 		for _, adminID := range bot.config.AdminRoles {
 			if adminID == roleID {
@@ -55,8 +59,8 @@ func (bot *Bot) IsAdmin(member *dg.Member) bool {
 	return false
 }
 
-// The first boolean returned is whether they're whitelisted or not.
-// the second boolean returned is whether or not they're an administrator
+// CheckRoles returns two booleans, first boolean returned is whether they're whitelisted or not.
+// The second boolean returned is whether or not they're an administrator
 func (bot *Bot) CheckRoles(roles []string) (isWhitelisted, isAdmin bool) {
 	isWhitelisted = false
 	isAdmin = false
@@ -78,7 +82,7 @@ func (bot *Bot) CheckRoles(roles []string) (isWhitelisted, isAdmin bool) {
 	return isWhitelisted, isAdmin
 }
 
-func (bot *Bot) Sync(memberID string) {
+func (bot *Bot) syncMember(memberID string) {
 	log.Printf("Syncing roles for \"%s\"\n", memberID)
 	member, err := bot.client.GuildMember(bot.config.Guild, memberID)
 
@@ -94,15 +98,4 @@ func (bot *Bot) Sync(memberID string) {
 	} else {
 		bot.sync.SyncRoles(memberID, &member.Roles)
 	}
-}
-
-func (bot *Bot) AdminCheck(role []string) bool {
-	for _, role := range role {
-		for _, adminRole := range bot.config.AdminRoles {
-			if adminRole == role {
-				return true
-			}
-		}
-	}
-	return false
 }

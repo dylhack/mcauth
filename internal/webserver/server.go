@@ -11,6 +11,8 @@ import (
 	"strconv"
 )
 
+// StartServer is for starting the HTTP webserver which communicates with the plugin
+// MCAuth Client.
 func StartServer(config *common.WebServerConfig, bot *bot.Bot, store *db.Store) {
 	router := mux.NewRouter()
 

@@ -5,7 +5,8 @@ import (
 	"log"
 )
 
-// if reason is empty and isValid is true then ignore reason
+// VerifyPlayer verifies and Minecraft player and returns a boolean and a reason why they are
+// verified or not.
 func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 	alt, _ := bot.store.Alts.GetAlt(playerID)
 
@@ -22,7 +23,7 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 			return false, c.NoLink
 		}
 
-		return bot.VerifyDiscordUser(userID)
+		return bot.verifyDiscordUser(userID)
 	}
 
 	userID, _ := bot.store.Links.GetDiscordID(playerID)
@@ -31,14 +32,14 @@ func (bot *Bot) VerifyPlayer(playerID string) (bool, string) {
 		return false, c.NoLink
 	}
 
-	return bot.VerifyDiscordUser(userID)
+	return bot.verifyDiscordUser(userID)
 }
 
-func (bot *Bot) VerifyDiscordUser(userID string) (bool, string) {
+func (bot *Bot) verifyDiscordUser(userID string) (bool, string) {
 	roles, isOK := bot.sync.GetRoles(userID)
 
 	if !isOK {
-		bot.Sync(userID)
+		bot.syncMember(userID)
 		roles, _ = bot.sync.GetRoles(userID)
 	}
 
