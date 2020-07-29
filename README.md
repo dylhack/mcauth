@@ -1,5 +1,5 @@
 # MCAuth
-![Go](https://github.com/dhghf/mcauth/workflows/Go/badge.svg?branch=production)
+![Build](https://github.com/dhghf/mcauth/workflows/Build/badge.svg?branch=production)
 
 For linking your Minecraft and Discord account together. MCAuth is for 
 Minecraft server owners to allow the right players in their Discord to play on
