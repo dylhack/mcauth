@@ -1,7 +1,10 @@
 # MCAuth
-For linking your Minecraft and Discord account together. MCAuth is for Minecraft server owners
-to allow the right players in their Discord to play on their server. MCAuth uses authentication
-codes which allows players to link their accounts with ease.
+![Go](https://github.com/dhghf/mcauth/workflows/Go/badge.svg?branch=production)
+
+For linking your Minecraft and Discord account together. MCAuth is for 
+Minecraft server owners to allow the right players in their Discord to play on
+their server. MCAuth uses authentication codes which allows players to link 
+their accounts with ease.
 
 MCAuth is under the [GNU General Public License 3](./LICENSE)
 
@@ -33,7 +36,8 @@ generate a default config file. Fill out the config file. A guide is provided
 
 ### 4. Setup Complete
 Once the plug in has been setup and running it should now be protecting your
-Minecraft server and actively listening to the players joining and verifying them.
+Minecraft server and actively listening to the players joining and verifying
+them.
 
 ## Bot Usage
 __Regular Commands__
