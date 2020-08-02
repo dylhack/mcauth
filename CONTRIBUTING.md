@@ -5,7 +5,7 @@ and give it the "why" you made the pull request.
 
 
 ## RTFM	
- 1. [The MCAuth Client (plugin)](./docs/1.%20The%20MCAuth%20Client%20(plugin).md)
+ 1. [The MCAuth Client](./docs/1.%20The%20MCAuth%20Client.md)
  2. [The Web Server](./docs/2.%20Web%20Server.md)
     1. [Verifying Players](./docs/2.1.%20Verifying%20Players.md)
     2. [Alt Account Management](./docs/2.2.%20Alt%20Account%20Management.md)
