@@ -90,7 +90,7 @@ func (bot *Bot) syncMember(memberID string) {
 		if strings.Contains(err.Error(), "Unknown Member") {
 			bot.sync.SyncRoles(memberID, &[]string{})
 		} else {
-			log.Fatalf(
+			log.Printf(
 				"Failed to fetch member \"%s\", please investigate \n%s",
 				memberID, err,
 			)
