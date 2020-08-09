@@ -1,5 +1,5 @@
-![Build](https://github.com/dhghf/mcauth/workflows/Build/badge.svg?branch=production)
-[![Go Report Card](https://goreportcard.com/badge/github.com/dhghf/mcauth)](https://goreportcard.com/report/github.com/dhghf/mcauth)
+![Build](https://github.com/dylhack/mcauth/workflows/Build/badge.svg?branch=production)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dylhack/mcauth)](https://goreportcard.com/report/github.com/dylhack/mcauth)
 
 # MCAuth
 For linking your Minecraft and Discord account together. MCAuth is for 
@@ -15,7 +15,7 @@ MCAuth is under the [GNU General Public License 3](./LICENSE)
  * [Spigot Minecraft Server](https://www.spigotmc.org/)
    * **Working Alternatives**
    * [Paper MC](https://papermc.io/)
- * [The MCAuth Client Minecraft Plugin](https://github.com/dhghf/mcauth-client)
+ * [The MCAuth Client Minecraft Plugin](https://github.com/dylhack/mcauth-client)
 
 
 ## Setup
@@ -33,7 +33,7 @@ generate a default config file. Fill out the config file. A guide is provided
 [here](./docs/extra/Configuration.md)
 
 ### 3. Setup the Plugin
-[Visit the plugin's README](https://github.com/dhghf/mcauth-client/blob/master/README.md)
+[Visit the plugin's README](https://github.com/dylhack/mcauth-client/blob/master/README.md)
 
 ### 4. Setup Complete
 Once the plug in has been setup and running it should now be protecting your
