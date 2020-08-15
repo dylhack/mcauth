@@ -37,8 +37,6 @@ however the code has not been submitted in Discord.
 #### Valid Player - Response
 The player exists, here is the linked account
 
-**Note: This is not finalised! The user#1234 data might be added following discussion on how the data should be obtained**
-
 | Attribute   | Type    | Description                                      |
 |-------------|---------|--------------------------------------------------|
 | snowflake   | string  | The Discord snowflake (id) of the player         |
