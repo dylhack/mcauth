@@ -36,8 +36,8 @@ in order to account for a change that is not backwards compatible.
 
 | Attribute   | Type    | Description                                      |
 |-------------|---------|--------------------------------------------------|
-| player_type | string  | Will be "pending_auth" - An auth code has been generated for the player, however the code has not been submitted in Discord. |
 | player_id   | string  | The Minecraft UUID for the player                |
+| player_type | string  | Will be "pending_auth" - An auth code has been generated for the player, however the code has not been submitted in Discord. |
 
 #### Valid Player - Response
 The player exists, here is the linked account
