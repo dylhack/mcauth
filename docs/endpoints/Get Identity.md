@@ -22,17 +22,22 @@ the following response if everything went alright, otherwise an error may occur.
 
 ### Response Body
 
-#### Invalid Player - Response
-There was a problem with finding the identity of the player.
+#### No Data - Response
+The player does not exist
 
 | Attribute   | Type    | Description                                      |
 |-------------|---------|--------------------------------------------------|
 | player_type | string  | Possible types are described below               |
+ - "not_found": This player could not be found
+ - "outdated_spec": special state indicating that the client must be updated
+in order to account for a change that is not backwards compatible.
 
- - "not_found": This player could not be found.
- - "pending_auth": An auth code has been generated for the player,
-however the code has not been submitted in Discord.
+#### Unlinked Player - Response
 
+| Attribute   | Type    | Description                                      |
+|-------------|---------|--------------------------------------------------|
+| player_type | string  | Will be "pending_auth" - An auth code has been generated for the player, however the code has not been submitted in Discord. |
+| player_id   | string  | The Minecraft UUID for the player                |
 
 #### Valid Player - Response
 The player exists, here is the linked account
@@ -40,6 +45,7 @@ The player exists, here is the linked account
 | Attribute   | Type    | Description                                      |
 |-------------|---------|--------------------------------------------------|
 | snowflake   | string  | The Discord snowflake (id) of the player         |
+| player_id   | string  | The Minecraft UUID for the player                |
 | player_type | string  | Possible types are described below               |
  - "player": This is a regular player who is allowed on the server.
  - "alt": This is an alt account of a staff member
