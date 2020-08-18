@@ -1,10 +1,10 @@
 # Player Verification
-This is where the client can retrieve the Discord identity of a player based on their Minecraft UUID without initiating an auth code check.
+This is where the client can retrieve the Discord identity of a player based on their Minecraft Name without initiating an auth code check.
 This can be useful for debugging the current state of the user.
 
-## GET /player/{Player UUID}
+## GET /player/{Player Name}
 Possible Errors:
- * [Missing Player UUID Attribute](#Missing-Player-UUID-Attribute)
+ * [Missing Player Name Attribute](#Missing-Player-Name-Attribute)
 
 This endpoint finds the discord identity of a player.
 
@@ -14,9 +14,9 @@ Required Headers:
 
 | Attribute   | Type   | Description             |
 |-------------|--------|-------------------------|
-| Player UUID | string | The Minecraft player ID |
+| Player Name | string | The Minecraft player name |
 
-The `player UUID` is the Minecraft player UUID stripped of all the dashes. The server will provide
+The `Player Name` is the Minecraft player Name stripped of all the dashes. The server will provide
 the following response if everything went alright, otherwise an error may occur.
 
 
@@ -47,7 +47,7 @@ The player exists, here is the linked account
 
 ## Errors
 
-### Missing Player UUID Attribute
+### Missing Player Name Attribute
 ```json
 {
   "errcode": "NO_PLAYER_ID",
