@@ -1,5 +1,5 @@
 # Alt Account Management
-he Minecraft server administrators can use alt account management to claim Minecraft players
+The Minecraft server administrators can use alt account management to claim Minecraft players
 as their alts. This will allow those players to join without authentication. This is super
 useful for mostly alts, but also any player you want to join without question. It will still
 check to see if the owner of the alt is authenticated which can only be done by administrators
