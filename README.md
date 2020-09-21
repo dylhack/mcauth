@@ -11,7 +11,7 @@ MCAuth is under the [GNU General Public License 3](./LICENSE)
 
 ## Requirements
  * [PostgreSQL](https://www.postgresql.org/)
- * [Go 1.14](https://golang.org/)
+ * [Go 1.14 or above](https://golang.org/)
  * [Spigot Minecraft Server](https://www.spigotmc.org/)
    * **Working Alternatives**
    * [Paper MC](https://papermc.io/)
