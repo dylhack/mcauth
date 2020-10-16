@@ -1,4 +1,4 @@
-module github.com/dhghf/mcauth
+module github.com/dylhack/mcauth
 
 go 1.14
 

@@ -1,10 +1,11 @@
 package routes
 
 import (
-	"github.com/dhghf/mcauth/internal/common"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/dylhack/mcauth/internal/common"
+	"github.com/gorilla/mux"
 )
 
 func (server *Server) verifyPlayer(res http.ResponseWriter, req *http.Request) {

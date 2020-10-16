@@ -1,10 +1,11 @@
 package routes
 
 import (
-	c "github.com/dhghf/mcauth/internal/common"
-	"github.com/dhghf/mcauth/internal/common/db"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	c "github.com/dylhack/mcauth/internal/common"
+	"github.com/dylhack/mcauth/internal/common/db"
+	"github.com/gorilla/mux"
 )
 
 // Get all the alt accounts associated with an owner.

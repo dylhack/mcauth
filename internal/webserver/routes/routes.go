@@ -2,12 +2,13 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/dhghf/mcauth/internal/bot"
-	"github.com/dhghf/mcauth/internal/common"
-	"github.com/dhghf/mcauth/internal/common/db"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/dylhack/mcauth/internal/bot"
+	"github.com/dylhack/mcauth/internal/common"
+	"github.com/dylhack/mcauth/internal/common/db"
+	"github.com/gorilla/mux"
 )
 
 // Server represents the webserver brought together.

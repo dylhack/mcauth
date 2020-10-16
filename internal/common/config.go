@@ -1,12 +1,13 @@
 package common
 
 import (
-	util "github.com/Floor-Gang/utilpkg/config"
-	"github.com/dhghf/mcauth/internal/common/db"
-	googleUUID "github.com/google/uuid"
 	"log"
 	"strings"
 	"time"
+
+	util "github.com/Floor-Gang/utilpkg/config"
+	"github.com/dylhack/mcauth/internal/common/db"
+	googleUUID "github.com/google/uuid"
 )
 
 // Config is all the configurations below combined.

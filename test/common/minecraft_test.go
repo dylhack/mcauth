@@ -1,8 +1,9 @@
 package common
 
 import (
-	"github.com/dhghf/mcauth/internal/common"
 	"testing"
+
+	"github.com/dylhack/mcauth/internal/common"
 )
 
 const (

@@ -1,9 +1,10 @@
 package authcodes
 
 import (
-	"github.com/dhghf/mcauth/internal/common/db"
-	db2 "github.com/dhghf/mcauth/test/common/db"
 	"testing"
+
+	"github.com/dylhack/mcauth/internal/common/db"
+	db2 "github.com/dylhack/mcauth/test/common/db"
 )
 
 var playerUUID = "5bce3068e4f3489fb66b5723b2a7cdb1"

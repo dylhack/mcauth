@@ -1,9 +1,10 @@
 package alts
 
 import (
-	"github.com/dhghf/mcauth/internal/common/db"
-	db2 "github.com/dhghf/mcauth/test/common/db"
 	"testing"
+
+	"github.com/dylhack/mcauth/internal/common/db"
+	db2 "github.com/dylhack/mcauth/test/common/db"
 )
 
 var (

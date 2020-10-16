@@ -57,7 +57,7 @@ __Visual Guides__
 
 ## 3. Setup the plugin
 You'll need the port and token from the webserver section of the config. Follow
-the guide [here](https://github.com/dhghf/mcauth-client) to install the plugin 
+the guide [here](https://github.com/dylhack/mcauth-client) to install the plugin 
 and configure it.
 
 ```yaml

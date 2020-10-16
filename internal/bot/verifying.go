@@ -1,8 +1,9 @@
 package bot
 
 import (
-	c "github.com/dhghf/mcauth/internal/common"
 	"log"
+
+	c "github.com/dylhack/mcauth/internal/common"
 )
 
 // VerifyPlayer verifies and Minecraft player and returns a boolean and a reason why they are

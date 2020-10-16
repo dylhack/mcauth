@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/dhghf/mcauth/internal/common/db"
 	"time"
+
+	"github.com/dylhack/mcauth/internal/common/db"
 )
 
 // TestConfig is the database configuration for testing, please modify before

@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/dhghf/mcauth/internal/bot"
-	"github.com/dhghf/mcauth/internal/common"
-	"github.com/dhghf/mcauth/internal/common/db"
-	"github.com/dhghf/mcauth/internal/webserver"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
+
+	"github.com/dylhack/mcauth/internal/bot"
+	"github.com/dylhack/mcauth/internal/common"
+	"github.com/dylhack/mcauth/internal/common/db"
+	"github.com/dylhack/mcauth/internal/webserver"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func main() {

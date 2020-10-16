@@ -2,11 +2,12 @@ package bot
 
 import (
 	"fmt"
-	util "github.com/Floor-Gang/utilpkg/botutil"
-	dg "github.com/bwmarrin/discordgo"
-	"github.com/dhghf/mcauth/internal/common"
 	"log"
 	"strconv"
+
+	util "github.com/Floor-Gang/utilpkg/botutil"
+	dg "github.com/bwmarrin/discordgo"
+	"github.com/dylhack/mcauth/internal/common"
 )
 
 const commands = `**Commands**
@@ -227,7 +228,7 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 func (bot *Bot) cmdStatus(msg *dg.Message) {
 	embed := &dg.MessageEmbed{
 		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
-		URL:   "https://github.com/dhghf/mcauth",
+		URL:   "https://github.com/dylhack/mcauth",
 		Color: 0xfc4646,
 	}
 

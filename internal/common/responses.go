@@ -1,6 +1,6 @@
 package common
 
-import "github.com/dhghf/mcauth/internal/common/db"
+import "github.com/dylhack/mcauth/internal/common/db"
 
 // ErrorResponse represents a generic error
 type ErrorResponse struct {

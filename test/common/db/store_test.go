@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/dhghf/mcauth/internal/common/db"
 	"testing"
+
+	"github.com/dylhack/mcauth/internal/common/db"
 )
 
 // TestGetStore tests connecting to the database.

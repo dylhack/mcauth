@@ -1,11 +1,12 @@
 package bot
 
 import (
-	dg "github.com/bwmarrin/discordgo"
-	c "github.com/dhghf/mcauth/internal/common"
-	"github.com/dhghf/mcauth/internal/common/db"
 	"log"
 	"strings"
+
+	dg "github.com/bwmarrin/discordgo"
+	c "github.com/dylhack/mcauth/internal/common"
+	"github.com/dylhack/mcauth/internal/common/db"
 )
 
 // Bot represents the Discord bot.

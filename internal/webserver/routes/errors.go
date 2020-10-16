@@ -2,9 +2,10 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/dhghf/mcauth/internal/common"
 	"log"
 	"net/http"
+
+	"github.com/dylhack/mcauth/internal/common"
 )
 
 // NoPlayerError means that the request is missing the player UUID attribute.

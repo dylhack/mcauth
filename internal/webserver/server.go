@@ -1,14 +1,15 @@
 package webserver
 
 import (
-	"github.com/dhghf/mcauth/internal/bot"
-	"github.com/dhghf/mcauth/internal/common"
-	"github.com/dhghf/mcauth/internal/common/db"
-	"github.com/dhghf/mcauth/internal/webserver/routes"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/dylhack/mcauth/internal/bot"
+	"github.com/dylhack/mcauth/internal/common"
+	"github.com/dylhack/mcauth/internal/common/db"
+	"github.com/dylhack/mcauth/internal/webserver/routes"
+	"github.com/gorilla/mux"
 )
 
 // StartServer is for starting the HTTP webserver which communicates with the plugin
