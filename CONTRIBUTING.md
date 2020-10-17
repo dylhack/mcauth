@@ -29,8 +29,8 @@ This is done in [/internal/bot/sync.go](./internal/bot/sync.go)
 For some situations we might need to figure out what a UUID is associated to
 what player name or vice-versa so we can use the Mojang API to resolve them.
 
- * [Getting Player name w/ UUID](https://github.com/dhghf/mcauth/blob/production/internal/common/minecraft.go#L29-L51)
- * [Getting Player UUID w/ name](https://github.com/dhghf/mcauth/blob/production/internal/common/minecraft.go#L53-L83)
+ * [Getting Player name w/ UUID](https://github.com/dylhack/mcauth/blob/production/internal/common/minecraft.go#L29-L51)
+ * [Getting Player UUID w/ name](https://github.com/dylhack/mcauth/blob/production/internal/common/minecraft.go#L53-L83)
 
 ### Request Authentication
 The webserver has a token attribute in the config.yml. Requests are checked up
