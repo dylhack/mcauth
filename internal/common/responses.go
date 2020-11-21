@@ -67,3 +67,8 @@ type DelAltResponse struct {
 	// whether or not it was successfully removed
 	IsRemoved bool `json:"is_deleted"`
 }
+
+// ResolveIDResponse comes from the /api/resolve/{id} endpoint
+type ResolveIDResponse struct {
+	Resolved string `json:"resolved_id"`
+}

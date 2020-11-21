@@ -68,6 +68,26 @@ func AltAlreadyExistsError(res http.ResponseWriter) {
 	ShipError(res, altAlreadyExists)
 }
 
+// MissingIDError occurs when an ID isn't provided in the /api/resolve endpoint
+func MissingIDError(res http.ResponseWriter) {
+	missingID := common.ErrorResponse{
+		ErrorCode: "MISSING_ID",
+		Message:   "A resolvable ID is missing in the URL path.",
+	}
+
+	ShipError(res, missingID)
+}
+
+// InvalidIDError occurs when someone tries to resolve an unresolvable ID
+func InvalidIDError(res http.ResponseWriter) {
+	invalidID := common.ErrorResponse{
+		ErrorCode: "INVALID_ID",
+		Message:   "The ID provided isn't in the database or is invalid.",
+	}
+
+	ShipError(res, invalidID)
+}
+
 // ShipError prepares and sends an error response given.
 func ShipError(res http.ResponseWriter, response interface{}) {
 	res.Header().Set("Content-Type", "application/json")

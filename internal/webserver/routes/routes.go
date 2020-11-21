@@ -47,6 +47,10 @@ func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfi
 	// DELETE /alt/{alt name}
 	router.HandleFunc("/alts/{alt_name}", server.deleteAlt).
 		Methods("DELETE")
+
+	// GET /api/resolve/{Discord ID or Minecraft UUIDv4}
+	router.HandleFunc("/api/resolve/{id}", server.resolveID).
+		Methods("GET")
 }
 
 // Ship sends a response body.
