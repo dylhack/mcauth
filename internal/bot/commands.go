@@ -228,19 +228,21 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 }
 
 // See the status of the bot
-func (bot *Bot) cmdStatus(msg *dg.Message) {
-	embed := &dg.MessageEmbed{
-		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
-		URL:   "https://github.com/dylhack/mcauth",
-		Color: 0xfc4646,
-	}
+func (bot *Bot) cmdStatus(msg *dg.Message) {	
 	var (
 		mcaModeStr      string
 		linkedAccCount  int
 		allPending      int
 		altAccsCount    int
     whitelistedList int
+    embed           *dg.MessageEmbed
 	) 
+
+	embed = &dg.MessageEmbed{
+		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
+		URL:   "https://github.com/dylhack/mcauth",
+		Color: 0xfc4646,
+	}
 
 	if bot.public {
 		mcaModeStr = "Public"
