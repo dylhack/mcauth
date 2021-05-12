@@ -109,7 +109,7 @@ func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 		adminAttempt = false
 	}
 
-	if adminAttempt {
+	if adminAttempt && !isAdmin {
 		_, _ = util.Reply(bot.client, msg,
 			"You must be an administrator to run this command.",
 		)
