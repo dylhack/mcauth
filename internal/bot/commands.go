@@ -228,15 +228,15 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 }
 
 // See the status of the bot
-func (bot *Bot) cmdStatus(msg *dg.Message) {	
+func (bot *Bot) cmdStatus(msg *dg.Message) {
 	var (
 		mcaModeStr      string
 		linkedAccCount  int
 		allPending      int
 		altAccsCount    int
-    whitelistedList int
-    embed           *dg.MessageEmbed
-	) 
+		whitelistedList int
+		embed           *dg.MessageEmbed
+	)
 
 	embed = &dg.MessageEmbed{
 		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
@@ -306,7 +306,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 }
 
 func (bot *Bot) cmdPublic(msg *dg.Message) {
-	var res string;
+	var res string
 
 	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
 
