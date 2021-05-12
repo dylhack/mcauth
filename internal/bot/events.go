@@ -105,6 +105,8 @@ func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 		} else {
 			adminAttempt = true
 		}
+	case "public":
+		bot.cmdPublic(msg)
 	default:
 		_, _ = util.Reply(bot.client, msg, bot.config.Help)
 	}

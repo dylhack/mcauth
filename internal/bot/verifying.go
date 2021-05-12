@@ -52,6 +52,11 @@ func (bot *Bot) verifyDiscordUser(userID string) (bool, string) {
 		return true, "Administrator"
 	}
 
+	// if MCAuth is in public mode
+	if bot.public {
+		return true, "MCAuth is in public mode"
+	}
+
 	// if they're a regular user then check if they have the right roles
 	if !isWhitelisted {
 		return false, c.NotWhitelisted

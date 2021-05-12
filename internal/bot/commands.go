@@ -15,10 +15,13 @@ const commands = `**Commands**
  - {prefix} help
  - {prefix} whoami
  - {prefix} whois <player name or @ Discord user>
- - {prefix} status
  - {prefix} unlink
 
 **Admin Commands**
+ - {prefix} lock
+ - {prefix} unlock
+ - {prefix} public
+ - {prefix} status
  - {prefix} unlink <player name or @ Discord user>
 `
 
@@ -287,4 +290,24 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 	if err != nil {
 		log.Println("Failed to send status", err.Error())
 	}
+}
+
+func (bot *Bot) cmdPublic(msg *dg.Message) {
+	var res string;
+
+	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
+
+	if !isAdmin {
+		_, _ = util.Reply(bot.client, msg, "Only bot admin can run this command.")
+		return
+	}
+
+	if bot.public {
+		res = "MCAuth is now in private mode, only whitelisted roles will be able to join"
+	} else {
+		res = "MCAuth is now in public mode, this will allow all users to join."
+	}
+
+	bot.public = !bot.public
+	bot.client.ChannelMessageSend(msg.ChannelID, res)
 }
