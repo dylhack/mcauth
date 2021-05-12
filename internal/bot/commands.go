@@ -234,7 +234,8 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		linkedAccCount  int
 		allPending      int
 		altAccsCount    int
-		whitelistedList int
+		whitelistedList string
+		adminRolesList  string
 		embed           *dg.MessageEmbed
 	)
 
@@ -283,7 +284,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		Inline: true,
 	}
 
-	adminRolesList := bot.getAdminRoles()
+	adminRolesList = bot.getAdminRoles()
 	adminRoles := &dg.MessageEmbedField{
 		Name:   "Admin Roles",
 		Value:  adminRolesList,
@@ -291,7 +292,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 	}
 
 	embed.Fields = []*dg.MessageEmbedField{
-		playersOnline, linkedAccounts, pendingAuthCodes,
+		mcaMode, linkedAccounts, pendingAuthCodes,
 		altAccsField, adminRoles, whitelisted,
 	}
 
