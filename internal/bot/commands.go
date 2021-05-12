@@ -21,6 +21,7 @@ const commands = `**Commands**
  - {prefix} lock
  - {prefix} unlock
  - {prefix} public
+ - {prefix} private
  - {prefix} status
  - {prefix} unlink <player name or @ Discord user>
 `
@@ -306,22 +307,28 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 	}
 }
 
-func (bot *Bot) cmdPublic(msg *dg.Message) {
+func (bot *Bot) cmdSetLock(msg *dg.Message, toLocked bool) {
 	var res string
 
-	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
-
-	if !isAdmin {
-		_, _ = util.Reply(bot.client, msg, "Only bot admin can run this command.")
-		return
+	if toLocked {
+		res = "Maintenance mode is now on."
+	} else {
+		res = "Maintenance mode is now off."
 	}
 
-	if bot.public {
+	bot.locked = toLocked
+	bot.client.ChannelMessageSend(msg.ChannelID, res)
+}
+
+func (bot *Bot) cmdSetMode(msg *dg.Message, toPrivate bool) {
+	var res string
+
+	if toPrivate {
 		res = "MCAuth is now in private mode, only whitelisted roles will be able to join"
 	} else {
 		res = "MCAuth is now in public mode, this will allow all users to join."
 	}
 
-	bot.public = !bot.public
+	bot.public = toPrivate
 	bot.client.ChannelMessageSend(msg.ChannelID, res)
 }

@@ -80,42 +80,36 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 	isAdmin := bot.isAdmin(msg.Member)
 
-	// whether they attempted to run an administrator related command
-	adminAttempt := false
-
 	switch args[1] {
 	/* Administrator Commands */
 	case "status":
 		if isAdmin {
 			bot.cmdStatus(msg)
-		} else {
-			adminAttempt = true
 		}
 	case "lock":
 		if isAdmin {
-			bot.locked = true
-			_, _ = util.Reply(bot.client, msg, "Maintenance mode is now on.")
-		} else {
-			adminAttempt = true
+			bot.cmdSetLock(msg, true)
 		}
 	case "unlock":
 		if isAdmin {
-			bot.locked = false
-			_, _ = util.Reply(bot.client, msg, "Maintenance mode is now off.")
-		} else {
-			adminAttempt = true
+			bot.cmdSetLock(msg, false)
 		}
 	case "public":
-		bot.cmdPublic(msg)
+		if isAdmin {
+			bot.cmdSetMode(msg, false)
+		}
+	case "private":
+		if isAdmin {
+			bot.cmdSetMode(msg, true)
+		}
 	default:
 		_, _ = util.Reply(bot.client, msg, bot.config.Help)
+		return
 	}
 
-	if adminAttempt {
-		_, _ = util.Reply(bot.client, msg,
-			"You must be an administrator to run this command.",
-		)
-	}
+	_, _ = util.Reply(bot.client, msg,
+		"You must be an administrator to run this command.",
+	)
 }
 
 func (bot *Bot) onGuildMemberUpdate(_ *dg.Session, event *dg.GuildMemberUpdate) {
