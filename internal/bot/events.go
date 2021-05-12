@@ -80,6 +80,8 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 	isAdmin := bot.isAdmin(msg.Member)
 
+	adminAttempt := true
+
 	switch args[1] {
 	/* Administrator Commands */
 	case "status":
@@ -104,12 +106,14 @@ func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 		}
 	default:
 		_, _ = util.Reply(bot.client, msg, bot.config.Help)
-		return
+		adminAttempt = false
 	}
 
-	_, _ = util.Reply(bot.client, msg,
-		"You must be an administrator to run this command.",
-	)
+	if adminAttempt {
+		_, _ = util.Reply(bot.client, msg,
+			"You must be an administrator to run this command.",
+		)
+	}
 }
 
 func (bot *Bot) onGuildMemberUpdate(_ *dg.Session, event *dg.GuildMemberUpdate) {
