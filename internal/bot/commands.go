@@ -234,36 +234,47 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 		URL:   "https://github.com/dylhack/mcauth",
 		Color: 0xfc4646,
 	}
+	var (
+		mcaModeStr      string
+		linkedAccCount  int
+		allPending      int
+		altAccsCount    int
+    whitelistedList int
+	) 
 
-	playerCount := bot.countPlayersOnline()
-	playersOnline := &dg.MessageEmbedField{
-		Name:   "Players Online",
-		Value:  strconv.Itoa(playerCount),
+	if bot.public {
+		mcaModeStr = "Public"
+	} else {
+		mcaModeStr = "Private"
+	}
+	mcaMode := &dg.MessageEmbedField{
+		Name:   "MCAuth Mode",
+		Value:  mcaModeStr,
 		Inline: true,
 	}
 
-	linkedAccCount := bot.countLinkedAccounts()
+	linkedAccCount = bot.countLinkedAccounts()
 	linkedAccounts := &dg.MessageEmbedField{
 		Name:   "Linked Accounts",
 		Value:  strconv.Itoa(linkedAccCount),
 		Inline: true,
 	}
 
-	allPending := bot.countPendingAuthCodes()
+	allPending = bot.countPendingAuthCodes()
 	pendingAuthCodes := &dg.MessageEmbedField{
 		Name:   "Pending Auth Codes",
 		Value:  strconv.Itoa(allPending),
 		Inline: true,
 	}
 
-	altAccsCount := bot.countAltAccounts()
+	altAccsCount = bot.countAltAccounts()
 	altAccsField := &dg.MessageEmbedField{
 		Name:   "Alt Accounts",
 		Value:  strconv.Itoa(altAccsCount),
 		Inline: true,
 	}
 
-	whitelistedList := bot.getWhitelistedRoles()
+	whitelistedList = bot.getWhitelistedRoles()
 	whitelisted := &dg.MessageEmbedField{
 		Name:   "Whitelisted Roles",
 		Value:  whitelistedList,
