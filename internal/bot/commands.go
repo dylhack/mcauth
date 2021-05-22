@@ -317,7 +317,7 @@ func (bot *Bot) cmdSetLock(msg *dg.Message, toLocked bool) {
 	}
 
 	bot.locked = toLocked
-	bot.client.ChannelMessageSend(msg.ChannelID, res)
+	_, _ = bot.client.ChannelMessageSend(msg.ChannelID, res)
 }
 
 func (bot *Bot) cmdSetMode(msg *dg.Message, toPrivate bool) {
@@ -329,6 +329,6 @@ func (bot *Bot) cmdSetMode(msg *dg.Message, toPrivate bool) {
 		res = "MCAuth is now in public mode, this will allow all users to join."
 	}
 
-	bot.public = toPrivate
-	bot.client.ChannelMessageSend(msg.ChannelID, res)
+	bot.public = !toPrivate
+	_, _ = bot.client.ChannelMessageSend(msg.ChannelID, res)
 }
