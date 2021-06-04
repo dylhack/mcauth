@@ -65,8 +65,6 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		bot.cmdWhoAmI(msg)
 	case "whois":
 		bot.cmdWhoIs(msg, args)
-	case "unlink":
-		bot.cmdUnlink(msg, args)
 	case "commands":
 		_, _ = util.Reply(
 			bot.client, msg.Message,
@@ -84,6 +82,10 @@ func (bot *Bot) onAdminCommand(msg *dg.Message, args []string) {
 
 	switch args[1] {
 	/* Administrator Commands */
+	case "unlink":
+		if isAdmin {
+			bot.cmdUnlink(msg, args)
+		}
 	case "status":
 		if isAdmin {
 			bot.cmdStatus(msg)
