@@ -17,6 +17,8 @@ type Bot struct {
 	sync   SyncHandler
 	// maintenance mode
 	locked bool
+	// public mode
+	public bool
 }
 
 // StartBot starts the Discord bot. It will return a pointer to the Bot for the webserver to use.
@@ -32,6 +34,7 @@ func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 		store:  store,
 		config: config,
 		locked: false,
+		public: false,
 		sync:   GetSyncHandler(),
 	}
 
