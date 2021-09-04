@@ -30,8 +30,11 @@ func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfi
 	router.HandleFunc("/verify/{playerID}", server.verifyPlayer).
 		Methods("GET")
 
-	/* Alt Account Management */
+	// GET /details/{playerID}
+	router.HandleFunc("/details/{playerID}", server.details).
+		Methods("GET")
 
+	/* Alt Account Management */
 	// GET /alts
 	router.HandleFunc("/alts", server.getAllAlts).
 		Methods("GET")
@@ -40,9 +43,9 @@ func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfi
 	router.HandleFunc("/alts/{owner}", server.getAltsOf).
 		Methods("GET")
 
-	// POST /alt/{owner name}
+	// PUT /alt/{owner name}
 	router.HandleFunc("/alts/{owner}/{alt_name}", server.postAlt).
-		Methods("POST")
+		Methods("POST", "PUT")
 
 	// DELETE /alt/{alt name}
 	router.HandleFunc("/alts/{alt_name}", server.deleteAlt).
