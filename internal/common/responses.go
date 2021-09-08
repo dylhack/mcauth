@@ -25,18 +25,6 @@ type InvalidPlayerAuth struct {
 	AuthCode string `json:"auth_code"`
 }
 
-const (
-	// NoLink means the player isn't linked with an account.
-	NoLink = "no_link"
-	// NotWhitelisted means the player's Discord account has missing required roles.
-	NotWhitelisted = "no_role"
-	// Maintenance means maintenance mode is on.
-	Maintenance = "maintenance"
-	// AuthCode means the player has a pending authentication code.
-	AuthCode = "auth_code"
-	//PlayerIsBanned = "banned"
-)
-
 // ValidPlayer says that the provided player is valid and ready to join the Minecraft server.
 type ValidPlayer struct {
 	Verified bool `json:"valid"`
@@ -71,4 +59,11 @@ type DelAltResponse struct {
 // ResolveIDResponse comes from the /api/resolve/{id} endpoint
 type ResolveIDResponse struct {
 	Resolved string `json:"resolved_id"`
+}
+
+type PlayerDetailsRes struct {
+	Id       string   `json:"id"`
+	Roles    []string `json:"roles"`
+	State    string   `json:"state"`
+	AuthCode string   `json:"auth_code"`
 }

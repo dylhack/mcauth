@@ -15,10 +15,13 @@ const commands = `**Commands**
  - {prefix} help
  - {prefix} whoami
  - {prefix} whois <player name or @ Discord user>
- - {prefix} status
- - {prefix} unlink
 
 **Admin Commands**
+ - {prefix} lock
+ - {prefix} unlock
+ - {prefix} public
+ - {prefix} private
+ - {prefix} status
  - {prefix} unlink <player name or @ Discord user>
 `
 
@@ -165,15 +168,15 @@ func (bot *Bot) cmdWhoIs(msg *dg.MessageCreate, args []string) {
 // 2. An admin can unlink someone's account
 // 2.1 Based on Discord user
 // 2.2 Based on Minecraft player name
-func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
+func (bot *Bot) cmdUnlink(msg *dg.Message, args []string) {
 	var err error
 	// 1. Just by saying "unlink" which will unlink the account associated with your account
 	// then -> args should be [<prefix>, unlink]
 	if len(args) < 3 {
 		if err = bot.store.Links.UnLink(msg.Author.ID); err != nil {
-			_, _ = util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+			_, _ = util.Reply(bot.client, msg, "You aren't linked with an account.")
 		} else {
-			_, _ = util.Reply(bot.client, msg.Message, "Unlinked.")
+			_, _ = util.Reply(bot.client, msg, "Unlinked.")
 		}
 		return
 	}
@@ -181,13 +184,13 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	/* 2. An admin can unlink someone's account */
 	// then -> args is [<prefix>, unlink, <@Discord User> OR <Minecraft player name>]
 	if len(msg.GuildID) == 0 {
-		_, _ = util.Reply(bot.client, msg.Message, "Run this command in a guild.")
+		_, _ = util.Reply(bot.client, msg, "Run this command in a guild.")
 		return
 	}
 	_, isAdmin := bot.CheckRoles(msg.Member.Roles)
 
 	if !isAdmin {
-		_, _ = util.Reply(bot.client, msg.Message, "Only bot admin can run this command.")
+		_, _ = util.Reply(bot.client, msg, "Only bot admin can run this command.")
 		return
 	}
 
@@ -198,11 +201,11 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 		if err = bot.store.Links.UnLink(user.ID); err != nil {
 			_, _ = util.Reply(
 				bot.client,
-				msg.Message,
+				msg,
 				"That user wasn't linked with any account.",
 			)
 		} else {
-			_, _ = util.Reply(bot.client, msg.Message, "Unlinked "+user.Mention()+".")
+			_, _ = util.Reply(bot.client, msg, "Unlinked "+user.Mention()+".")
 		}
 		return
 	}
@@ -213,61 +216,75 @@ func (bot *Bot) cmdUnlink(msg *dg.MessageCreate, args []string) {
 	playerID := common.GetPlayerID(playerName)
 
 	if len(playerID) == 0 {
-		_, _ = util.Reply(bot.client, msg.Message, playerName+" isn't a Minecraft account.")
+		_, _ = util.Reply(bot.client, msg, playerName+" isn't a Minecraft account.")
 		return
 	}
 
 	if err = bot.store.Links.UnLink(playerID); err != nil {
-		_, _ = util.Reply(bot.client, msg.Message, "You aren't linked with an account.")
+		_, _ = util.Reply(bot.client, msg, "You aren't linked with an account.")
 	} else {
-		_, _ = util.Reply(bot.client, msg.Message, "Unlinked "+playerName+".")
+		_, _ = util.Reply(bot.client, msg, "Unlinked "+playerName+".")
 	}
 }
 
 // See the status of the bot
 func (bot *Bot) cmdStatus(msg *dg.Message) {
-	embed := &dg.MessageEmbed{
+	var (
+		mcaModeStr      string
+		linkedAccCount  int
+		allPending      int
+		altAccsCount    int
+		whitelistedList string
+		adminRolesList  string
+		embed           *dg.MessageEmbed
+	)
+
+	embed = &dg.MessageEmbed{
 		Title: fmt.Sprintf("MCAuth Status [%s]", common.Version),
 		URL:   "https://github.com/dylhack/mcauth",
 		Color: 0xfc4646,
 	}
 
-	playerCount := bot.countPlayersOnline()
-	playersOnline := &dg.MessageEmbedField{
-		Name:   "Players Online",
-		Value:  strconv.Itoa(playerCount),
+	if bot.public {
+		mcaModeStr = "Public"
+	} else {
+		mcaModeStr = "Private"
+	}
+	mcaMode := &dg.MessageEmbedField{
+		Name:   "MCAuth Mode",
+		Value:  mcaModeStr,
 		Inline: true,
 	}
 
-	linkedAccCount := bot.countLinkedAccounts()
+	linkedAccCount = bot.countLinkedAccounts()
 	linkedAccounts := &dg.MessageEmbedField{
 		Name:   "Linked Accounts",
 		Value:  strconv.Itoa(linkedAccCount),
 		Inline: true,
 	}
 
-	allPending := bot.countPendingAuthCodes()
+	allPending = bot.countPendingAuthCodes()
 	pendingAuthCodes := &dg.MessageEmbedField{
 		Name:   "Pending Auth Codes",
 		Value:  strconv.Itoa(allPending),
 		Inline: true,
 	}
 
-	altAccsCount := bot.countAltAccounts()
+	altAccsCount = bot.countAltAccounts()
 	altAccsField := &dg.MessageEmbedField{
 		Name:   "Alt Accounts",
 		Value:  strconv.Itoa(altAccsCount),
 		Inline: true,
 	}
 
-	whitelistedList := bot.getWhitelistedRoles()
+	whitelistedList = bot.getWhitelistedRoles()
 	whitelisted := &dg.MessageEmbedField{
 		Name:   "Whitelisted Roles",
 		Value:  whitelistedList,
 		Inline: true,
 	}
 
-	adminRolesList := bot.getAdminRoles()
+	adminRolesList = bot.getAdminRoles()
 	adminRoles := &dg.MessageEmbedField{
 		Name:   "Admin Roles",
 		Value:  adminRolesList,
@@ -275,7 +292,7 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 	}
 
 	embed.Fields = []*dg.MessageEmbedField{
-		playersOnline, linkedAccounts, pendingAuthCodes,
+		mcaMode, linkedAccounts, pendingAuthCodes,
 		altAccsField, adminRoles, whitelisted,
 	}
 
@@ -287,4 +304,30 @@ func (bot *Bot) cmdStatus(msg *dg.Message) {
 	if err != nil {
 		log.Println("Failed to send status", err.Error())
 	}
+}
+
+func (bot *Bot) cmdSetLock(msg *dg.Message, toLocked bool) {
+	var res string
+
+	if toLocked {
+		res = "Maintenance mode is now on."
+	} else {
+		res = "Maintenance mode is now off."
+	}
+
+	bot.locked = toLocked
+	_, _ = bot.client.ChannelMessageSend(msg.ChannelID, res)
+}
+
+func (bot *Bot) cmdSetMode(msg *dg.Message, toPrivate bool) {
+	var res string
+
+	if toPrivate {
+		res = "MCAuth is now in private mode, only whitelisted roles will be able to join"
+	} else {
+		res = "MCAuth is now in public mode, this will allow all users to join."
+	}
+
+	bot.public = !toPrivate
+	_, _ = bot.client.ChannelMessageSend(msg.ChannelID, res)
 }
