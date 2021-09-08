@@ -5,7 +5,7 @@ import (
 	"log"
 	"strconv"
 
-	util "github.com/Floor-Gang/utilpkg/botutil"
+	util "github.com/NewCircuit/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
 	"github.com/dylhack/mcauth/internal/common"
 )

@@ -3,7 +3,8 @@ module github.com/dylhack/mcauth
 go 1.14
 
 require (
-	github.com/NewCircuit/utilpkg v0.0.0-20210304193614-4dc768e50829 // indirect
+	github.com/Floor-Gang/utilpkg v0.0.0-20200910190225-471dad9310d2
+	github.com/NewCircuit/utilpkg v0.0.0-20210304193614-4dc768e50829
 	github.com/bwmarrin/discordgo v0.23.1
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.8.0

@@ -1,5 +1,7 @@
 github.com/Floor-Gang/utilpkg v0.0.0-20200714220544-0281443cd2a5 h1:flk1nRXzprcEdrvO0tslnbU4A/AyPi5UFcjl8MRyiCs=
 github.com/Floor-Gang/utilpkg v0.0.0-20200714220544-0281443cd2a5/go.mod h1:N54bf2RQdkWxc/J/zhUf61g4+uBrFXnmejTWRm60WpI=
+github.com/Floor-Gang/utilpkg v0.0.0-20200910190225-471dad9310d2 h1:n4j3jruy+JZt5UGnRUPkcuEWRqm7JQjNfYt73P9q0Lk=
+github.com/Floor-Gang/utilpkg v0.0.0-20200910190225-471dad9310d2/go.mod h1:YGMhgcYTkgeexqN0A4t3fP9MBFF+IFEY0sjFcM7Q6Ko=
 github.com/NewCircuit/utilpkg v0.0.0-20210304193614-4dc768e50829 h1:9ib85U4aCL4eEO4vtVm/5HIHWiF34h9EmbnjEAoCyyQ=
 github.com/NewCircuit/utilpkg v0.0.0-20210304193614-4dc768e50829/go.mod h1:U5CzGPUtI+XhHaT3QPmkSu0A4jXDeQ437ynVKAHscWc=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
