@@ -49,7 +49,7 @@ func (bot *Bot) verifyDiscordUser(userID string) (bool, string) {
 
 	// if they're an admin then they pass all exceptions
 	if hasAdmin {
-		return true, "Administrator"
+		return true, c.IsAdmin
 	}
 
 	// if MCAuth is in public mode
@@ -68,5 +68,5 @@ func (bot *Bot) verifyDiscordUser(userID string) (bool, string) {
 	}
 
 	// finally return true
-	return true, "Whitelisted"
+	return true, c.Whitelisted
 }

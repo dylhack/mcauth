@@ -30,6 +30,10 @@ func StartAllRoutes(bot *bot.Bot, store *db.Store, config *common.WebServerConfi
 	router.HandleFunc("/verify/{playerID}", server.verifyPlayer).
 		Methods("GET")
 
+	// GET /details/{playerID}
+	router.HandleFunc("/details/{playerID}", server.details).
+		Methods("GET")
+
 	/* Alt Account Management */
 
 	// GET /alts

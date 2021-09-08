@@ -25,10 +25,6 @@ type Bot struct {
 func StartBot(config *c.DiscordConfig, store *db.Store) *Bot {
 	client, _ := dg.New("Bot " + config.Token)
 
-	client.Identify.Intents = dg.MakeIntent(
-		dg.IntentsGuildMessages + dg.IntentsGuildMembers,
-	)
-
 	bot := &Bot{
 		client: client,
 		store:  store,
